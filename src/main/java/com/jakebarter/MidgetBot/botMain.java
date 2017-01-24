@@ -4,9 +4,6 @@ import com.google.common.util.concurrent.FutureCallback;
 import de.btobastian.javacord.DiscordAPI;
 import de.btobastian.javacord.Javacord;
 
-/**
- * Created by midg3 on 24/01/2017.
- */
 public class botMain {
     public static void main(String[] args){
 
@@ -18,7 +15,6 @@ public class botMain {
         api.connect(new FutureCallback<DiscordAPI>() {
 
             //Hey! We connected
-            @Override
             public void onSuccess(final DiscordAPI api) {
                 //Now let's listen to everyone's messages >:D
                 botMessageListener myListener = new botMessageListener();
@@ -26,15 +22,13 @@ public class botMain {
             }
 
             //Well... something went wrong and we couldn't connect :(
-            @Override
             public void onFailure(Throwable t) {
                 // login failed
                 t.printStackTrace();
+                System.out.println("It seems we cannot connect...");
+                //WTF do we do if we cant connect?
             }
         });
 
     }
-
-
-
 }

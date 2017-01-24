@@ -1,8 +1,5 @@
 package com.jakebarter.MidgetBot;
 
-/**
- * Created by midg3 on 24/01/2017.
- */
 public class botUser {
      public void newUser(){
          //TODO:

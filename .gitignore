@@ -47,4 +47,4 @@ Temporary Items
 .apdisk
 
 # Ignore our idea folder
-.idea
+.idea/

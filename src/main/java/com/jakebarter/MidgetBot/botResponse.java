@@ -14,6 +14,9 @@ class botResponse {
     //Using a chat bot api//
     String cleverChat(String[] msg) throws Exception {
         String rMsg = "";
+        if(msg.length == 1){
+            return "What do you want?";
+        }
         for (String m : msg) {
             if (!m.equals("<@273529250689318923>")){
                 rMsg += m + " ";

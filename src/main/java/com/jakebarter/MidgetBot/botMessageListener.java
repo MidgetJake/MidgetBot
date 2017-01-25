@@ -82,13 +82,13 @@ class botMessageListener implements MessageCreateListener {
                 }
             }
 
-            //Upvote/Downvote for images
+            // Upvote/Downvote for images
             if (!m.getAttachments().isEmpty()) {
                 String tu = EmojiParser.parseToUnicode(":thumbsup:");
                 String td = EmojiParser.parseToUnicode(":thumbsdown:");
                 m.addUnicodeReaction(tu);
                 try {
-                    Thread.sleep(500); //  half a second
+                    Thread.sleep(750); //  half a second
                 } catch(InterruptedException ex) {
                     Thread.currentThread().interrupt();
                 }

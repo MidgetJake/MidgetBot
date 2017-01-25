@@ -37,6 +37,13 @@ class botMessageListener implements MessageCreateListener {
             String[] msg = breakMessage(m);
             //We only want to check the first word
 
+            //This is 100% the wrong way to do this... But it works
+            if(m.getContent().toLowerCase().contains("<@273529250689318923>")){
+                botResponse talk = new botResponse();
+                //m.reply(talk.botChat(msg)); //This is the old dumb chat
+                m.reply(talk.cleverChat(msg)); //Not that this chat is very clever
+            }
+
             if(msg[0].equalsIgnoreCase("!time")){
                 if (msg.length>1){
                     try {
@@ -93,10 +100,7 @@ class botMessageListener implements MessageCreateListener {
                 m.reply("Sah dude");
             }
 
-            //This is 100% the wrong way to do this... But it works
-            if(m.getContent().toLowerCase().contains("<@273529250689318923>")){
-                m.reply("Yeees?");
-            }
+
 
             //I guess some server info will be posted here
             if (msg[0].equalsIgnoreCase("!server")) {

@@ -19,6 +19,7 @@ public class botMain {
                 //Now let's listen to everyone's messages >:D
                 botMessageListener myListener = new botMessageListener();
                 api.registerListener(myListener);
+                api.setGame("Dying on the inside");
             }
 
             //Well... something went wrong and we couldn't connect :(

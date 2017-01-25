@@ -1,6 +1,6 @@
 package com.jakebarter.MidgetBot;
 
-public class botUser {
+class botUser {
      public void newUser(){
          //TODO:
          //User objects so that data can be saved about each

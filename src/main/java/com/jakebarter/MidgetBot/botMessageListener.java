@@ -2,10 +2,12 @@ package com.jakebarter.MidgetBot;
 
 import com.vdurmont.emoji.EmojiParser;
 import de.btobastian.javacord.DiscordAPI;
-import de.btobastian.javacord.entities.Server;
 import de.btobastian.javacord.entities.message.Message;
 import de.btobastian.javacord.listener.message.MessageCreateListener;
-import java.util.ArrayList;
+import de.btobastian.javacord.utils.PacketHandler;
+
+import java.util.Calendar;
+import java.util.TimeZone;
 
 
 class botMessageListener implements MessageCreateListener {
@@ -35,6 +37,26 @@ class botMessageListener implements MessageCreateListener {
             String[] msg = breakMessage(m);
             //We only want to check the first word
 
+            if(msg[0].equalsIgnoreCase("!time")){
+                if (msg.length>1){
+                    try {
+                        TimeZone tz = TimeZone.getTimeZone(msg[1]);
+                        Calendar c = Calendar.getInstance(tz);
+                        m.reply(c.get(java.util.Calendar.HOUR_OF_DAY) + ":" + c.get(java.util.Calendar.MINUTE) + ":" + c.get(java.util.Calendar.SECOND) + " " + msg[1]);
+                    }
+                    catch (Exception e) {
+                        m.reply("Does that timezone exist?");
+                        m.reply("If it does send this to the dev: ");
+                        m.reply(e.toString());
+                    }
+                } else {
+                    //We default to GMT because it is the best time
+                    TimeZone tz = TimeZone.getTimeZone("GMT");
+                    Calendar c = Calendar.getInstance(tz);
+                    m.reply(c.get(java.util.Calendar.HOUR_OF_DAY) + ":" + c.get(java.util.Calendar.MINUTE) + ":" + c.get(java.util.Calendar.SECOND) + " GMT");
+                }
+            }
+
             if (msg[0].equalsIgnoreCase("!help")){
                 if (msg.length > 1){
                     botHelp help = new botHelp();
@@ -49,6 +71,7 @@ class botMessageListener implements MessageCreateListener {
                             "!program - non-functional possibly going to compile code?\n" +
                             "friend? - Is the bot your friend?\n" +
                             "!navyseal - Come on... You know this...\n" +
+                            "!time - Displays current time\n" +
                             "image - Not a command but still... Type !help image to see more```");
                 }
             }

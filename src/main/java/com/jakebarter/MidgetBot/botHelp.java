@@ -7,6 +7,7 @@ class botHelp {
     String helpMsg(String cmd){
         cmd = cmd.toLowerCase();
 
+        //Long list of help
         if (cmd.equals("!help")) {
             return "```You just used this... \n\n - Will give you help ```";
         } else if (cmd.equals("!server")) {

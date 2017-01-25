@@ -4,7 +4,6 @@ import com.vdurmont.emoji.EmojiParser;
 import de.btobastian.javacord.DiscordAPI;
 import de.btobastian.javacord.entities.message.Message;
 import de.btobastian.javacord.listener.message.MessageCreateListener;
-import de.btobastian.javacord.utils.PacketHandler;
 
 import java.util.Calendar;
 import java.util.TimeZone;
@@ -12,7 +11,7 @@ import java.util.TimeZone;
 
 class botMessageListener implements MessageCreateListener {
 
-
+    //Hey! A new message
     public void onMessageCreate(DiscordAPI api, Message message) {
         //We don't want the bot to respond to itself... That's just sad
         if (!message.getAuthor().getId().equals("273529250689318923")) {

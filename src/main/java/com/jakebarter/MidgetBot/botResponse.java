@@ -1,16 +1,17 @@
 package com.jakebarter.MidgetBot;
 
-import com.google.code.chatterbotapi.ChatterBot;
-import com.google.code.chatterbotapi.ChatterBotFactory;
-import com.google.code.chatterbotapi.ChatterBotSession;
-import com.google.code.chatterbotapi.ChatterBotType;
+//import com.google.code.chatterbotapi.ChatterBot;
+//import com.google.code.chatterbotapi.ChatterBotFactory;
+//import com.google.code.chatterbotapi.ChatterBotSession;
+//import com.google.code.chatterbotapi.ChatterBotType;
 
+import com.jakebarter.chatterBotAPI.*;
 import java.util.Random;
 
 class botResponse {
 
 
-    //Using a chat bot api
+    //Using a chat bot api//
     String cleverChat(String[] msg) throws Exception {
         String rMsg = "";
         for (String m : msg) {

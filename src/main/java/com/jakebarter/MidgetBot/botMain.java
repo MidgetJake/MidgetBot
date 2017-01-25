@@ -9,7 +9,7 @@ public class botMain {
     public static void main(String[] args){
 
         //Setup our API call token
-        DiscordAPI api = Javacord.getApi("#########################", true);
+        DiscordAPI api = Javacord.getApi("#####", true);
         String token = api.getToken(); //Storing it incase of future use
         System.out.println("Open");
         //Initialize the bot

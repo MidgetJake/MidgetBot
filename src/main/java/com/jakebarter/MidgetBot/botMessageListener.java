@@ -4,8 +4,8 @@ import com.vdurmont.emoji.EmojiParser;
 import de.btobastian.javacord.DiscordAPI;
 import de.btobastian.javacord.entities.message.Message;
 import de.btobastian.javacord.listener.message.MessageCreateListener;
-
 import java.util.Calendar;
+import java.util.Random;
 import java.util.TimeZone;
 
 
@@ -41,6 +41,24 @@ class botMessageListener implements MessageCreateListener {
                 botResponse talk = new botResponse();
                 //m.reply(talk.botChat(msg)); //This is the old dumb chat
                 m.reply(talk.cleverChat(msg)); //Not that this chat is very clever
+            }
+
+            if(msg[0].equalsIgnoreCase("rand")){
+                try {
+                    int l = Integer.parseInt(msg[1]);
+                    int h = Integer.parseInt(msg[2]);
+                    if (l < h) {
+                        Random rand = new Random();
+                        int randomNum = rand.nextInt((h - l) + 1) + l;
+                        m.reply(Integer.toString(randomNum));
+                    } else {
+                        m.reply("The first Integer MUST be smaller than the second");
+                    }
+                }
+                catch (Exception e){
+                    m.reply("You didn't do that right!");
+                    m.reply("Proper usage: rand [Integer] [Integer]");
+                }
             }
 
             if(msg[0].equalsIgnoreCase("!time")){

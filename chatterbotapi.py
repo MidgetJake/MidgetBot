@@ -168,7 +168,7 @@ class _PandorabotsSession(ChatterBotSession):
         self.vars['input'] = thought.text
         data = urlencode(self.vars)
         binary_data = data.encode('ascii')
-        url_response = urlopen('http://www.pandorabots.com/pandora/talk-xml', binary_data)
+        url_response = urlopen('https://www.pandorabots.com/pandora/talk-xml', binary_data)
         response = url_response.read()
         response_dom = xml.dom.minidom.parseString(response)
         response_thought = ChatterBotThought()

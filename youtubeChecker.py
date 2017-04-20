@@ -3,10 +3,6 @@ import requests
 import json
 from urllib import request
 
-title = '-Default-'
-liveLink = '-Default-'
-thumbN = '-Default-'
-
 def isLive(chanID):
     urlRequest = requests.get('https://www.googleapis.com/youtube/v3/search',
                            params={'part': 'snippet',
@@ -15,82 +11,56 @@ def isLive(chanID):
                                    'eventType': 'live',
                                    'key': tokenKeys.google})
     parsedData = urlRequest.json()
-    #print(parsedData)
+    print(parsedData)
     try:
         title = parsedData['items'][0]['snippet']['title']
-        liveLink = 'http://youtube.com/channel/'+chanID+'/live'
-        thumbN = parsedData['items'][0]['snippet']['thumbnails']['high']['url']
-        #print(title)
-        #print(liveLink)
-        #print(thumbN)
-        return True
+        liveLink = parsedData['items'][0]['id']['videoId']
+        try:
+            thumbnailURL = parsedData['items'][0]['snippet']['thumbnails']['high']['url']
+            request.urlretrieve(thumbnailURL, 'thumbnails/' + chanID + 'temp.jpg')
+            setThumb = True
+        except:
+            print('failed at retrieving thumbnail')
+            setThumb = False
+        chanName = parsedData['items'][0]['snippet']['channelTitle']
+        tupleData = (chanID, title, liveLink, chanName, setThumb)
+        return tupleData
     except:
         #print('Not Live!')
         return False
 
-def findLiveChans(timeCheck):
+#isLive('UCxEGkCtjJ77zoaKqW7ZY97g')
+
+def findLiveChans(cdList):
+    calls = 0
     channels = []
-    if(timeCheck > 5000000):
-        with open('serverYTSetup') as jsonOpen:
-            jsonData = json.load(jsonOpen)
-        for channel in jsonData:
-            chanList = jsonData[channel]
-            for ytChan in chanList:
-                if (isLive(ytChan)):
-                    channels.append((channel, ytChan))
+    with open('serverYTSetup') as jsonOpen:
+        jsonData = json.load(jsonOpen)
+    tmpChan = []
+    gotChan = []
+    chanData = []
+    for channel in jsonData:
+        chanList = jsonData[channel]
+        for ytChan in chanList:
+            if ytChan in cdList:
+                tmpChan.append((channel, ytChan))
+    for plzCheck in tmpChan:
+        if plzCheck[1] not in gotChan:
+            gotChan.append(plzCheck[1])
+            data = isLive(plzCheck[1])
+            calls+=1
+            if data:
+                chanData.append(data)
+    for getTup in tmpChan:
+        for getData in chanData:
+            if getTup[1] == getData[0]:
+                channels.append((getTup[0], getData))
+            #if ytChan not in cdList:
+            #    data = isLive(ytChan)
+            #    if data:
+            #        channels.append((channel, data))
+    print(calls)
     return channels
-
-def getLiveTitle(chanID):
-    print('Trying to get Title')
-    urlRequest = requests.get('https://www.googleapis.com/youtube/v3/search',
-                              params={'part': 'snippet',
-                                      'channelId': chanID,
-                                      'type': 'video',
-                                      'eventType': 'live',
-                                      'key': tokenKeys.google})
-    parsedData = urlRequest.json()
-    return parsedData['items'][0]['snippet']['title']
-
-def getLiveThumbnail(chanID):
-    print('Trying to get Thumbnail')
-    urlRequest = requests.get('https://www.googleapis.com/youtube/v3/search',
-                           params={'part': 'snippet',
-                                   'channelId': chanID,
-                                   'type': 'video',
-                                   'eventType': 'live',
-                                   'key': tokenKeys.google})
-    parsedData = urlRequest.json()
-    try:
-        thumbnailURL = parsedData['items'][0]['snippet']['thumbnails']['high']['url']
-        request.urlretrieve(thumbnailURL, "temp.jpg")
-    except:
-        print('Something went wrong getting the thumbnail')
-
-def getLiveLink(chanID):
-    print('Trying to get the stream link!')
-    urlRequest = requests.get('https://www.googleapis.com/youtube/v3/search',
-                           params={'part': 'snippet',
-                                   'channelId': chanID,
-                                   'type': 'video',
-                                   'eventType': 'live',
-                                   'key': tokenKeys.google})
-    parsedData = urlRequest.json()
-    try:
-        return parsedData['items'][0]['id']['videoId']
-    except:
-        print('Something went wrong getting the link')
-
-
-
-def getChanName(chanID):
-    print('Trying to get the channel name')
-    urlRequest= requests.get('https://www.googleapis.com/youtube/v3/search',
-                           params={'part' : 'snippet',
-                                    'channelId': chanID,
-                                    'type': 'channel',
-                                     'key': tokenKeys.google})
-    parsedData = urlRequest.json()
-    return (parsedData['items'][0]['snippet']['title'])
 
 def doesChanExist(chanID):
     urlRequest= requests.get('https://www.googleapis.com/youtube/v3/search',

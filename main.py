@@ -70,6 +70,31 @@ async def on_message(message):
                     for chan in message.server.channels:
                         print(chan)
 
+                if msg[0] == "!allowPromo" or msg[0] == "!ap":
+                    if (message.author.permissions_in(message.channel).administrator):
+                        with open('serverSettings') as jsonLoad:
+                            sSetting = json.load(jsonLoad)
+                        if msg[1].lower() == "true":
+                            try:
+                                sSetting[message.server.id][message.channel.id]['canPromoteDiscord'] = True
+                            except:
+                                sSetting[message.server.id] = {}
+                                sSetting[message.server.id][message.channel.id] = {}
+                                sSetting[message.server.id][message.channel.id]['canPromoteDiscord'] = True
+                            with open('serverSettings', 'w') as jsonWrite:
+                                json.dump(sSetting, jsonWrite)
+                            await client.send_message(message.channel, "Promotion of discord servers is now enabled in this channel")
+                        elif msg[1].lower() == "false":
+                            try:
+                                sSetting[message.server.id][message.channel.id]['canPromoteDiscord'] = False
+                            except:
+                                sSetting[message.server.id] = {}
+                                sSetting[message.server.id][message.channel.id] = {}
+                                sSetting[message.server.id][message.channel.id]['canPromoteDiscord'] = False
+                            with open('serverSettings', 'w') as jsonWrite:
+                                json.dump(sSetting, jsonWrite)
+                            await client.send_message(message.channel, "Promotion of discord servers is now disabled in this channel")
+
                 #If the bot is mentioned repsond with the chatterbot
                 if '<@273529250689318923>' in message.content:
                     await client.send_message(message.channel, botChat.botChat(message.content))

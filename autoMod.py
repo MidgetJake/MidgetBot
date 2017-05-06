@@ -47,11 +47,18 @@ def checkForDiscordProm(msg):
         sSetting = json.load(jsonLoad)
 
     try:
-        canProm = sSetting[msg.server.id][msg.channel.id]['canPromoteDiscord']
+        canProm = sSetting[msg.server.id][msg.channel.id]['canPromoteDiscord'] = True
     except:
-        sSetting[msg.server.id] = {}
-        sSetting[msg.server.id][msg.channel.id] = {}
-        sSetting[msg.server.id][msg.channel.id]['canPromoteDiscord'] = True
+        try:
+            sSetting[msg.server.id][msg.channel.id]['canPromoteDiscord'] = True
+        except:
+            try:
+                sSetting[msg.server.id][msg.channel.id] = {}
+                sSetting[msg.server.id][msg.channel.id]['canPromoteDiscord'] = True
+            except:
+                sSetting[msg.server.id] = {}
+                sSetting[msg.server.id][msg.channel.id] = {}
+                sSetting[msg.server.id][msg.channel.id]['canPromoteDiscord'] = True
         with open('serverSettings', 'w') as jsonWrite:
             json.dump(sSetting, jsonWrite)
         canProm = True

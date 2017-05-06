@@ -55,8 +55,11 @@ async def on_message(message):
                         if chanAvail:
                             bWords[message.server.id][message.channel.id] = bList
                         else:
-                            bWords[message.server.id] = {}
-                            bWords[message.server.id][message.channel.id] = bList
+                            try:
+                                bWords[message.server.id][message.channel.id] = bList
+                            except:
+                                bWords[message.server.id] = {}
+                                bWords[message.server.id][message.channel.id] = bList
                         with open('serverBannedWords', 'w') as jsonWrite:
                             json.dump(bWords, jsonWrite)
                         await client.send_message(message.channel, "Added new words to the banned list!")
@@ -78,9 +81,16 @@ async def on_message(message):
                             try:
                                 sSetting[message.server.id][message.channel.id]['canPromoteDiscord'] = True
                             except:
-                                sSetting[message.server.id] = {}
-                                sSetting[message.server.id][message.channel.id] = {}
-                                sSetting[message.server.id][message.channel.id]['canPromoteDiscord'] = True
+                                try:
+                                    sSetting[message.server.id][message.channel.id]['canPromoteDiscord'] = True
+                                except:
+                                    try:
+                                        sSetting[message.server.id][message.channel.id] = {}
+                                        sSetting[message.server.id][message.channel.id]['canPromoteDiscord'] = True
+                                    except:
+                                        sSetting[message.server.id] = {}
+                                        sSetting[message.server.id][message.channel.id] = {}
+                                        sSetting[message.server.id][message.channel.id]['canPromoteDiscord'] = True
                             with open('serverSettings', 'w') as jsonWrite:
                                 json.dump(sSetting, jsonWrite)
                             await client.send_message(message.channel, "Promotion of discord servers is now enabled in this channel")
@@ -88,9 +98,16 @@ async def on_message(message):
                             try:
                                 sSetting[message.server.id][message.channel.id]['canPromoteDiscord'] = False
                             except:
-                                sSetting[message.server.id] = {}
-                                sSetting[message.server.id][message.channel.id] = {}
-                                sSetting[message.server.id][message.channel.id]['canPromoteDiscord'] = False
+                                try:
+                                    sSetting[message.server.id][message.channel.id]['canPromoteDiscord'] = False
+                                except:
+                                    try:
+                                        sSetting[message.server.id][message.channel.id] = {}
+                                        sSetting[message.server.id][message.channel.id]['canPromoteDiscord'] = False
+                                    except:
+                                        sSetting[message.server.id] = {}
+                                        sSetting[message.server.id][message.channel.id] = {}
+                                        sSetting[message.server.id][message.channel.id]['canPromoteDiscord'] = False
                             with open('serverSettings', 'w') as jsonWrite:
                                 json.dump(sSetting, jsonWrite)
                             await client.send_message(message.channel, "Promotion of discord servers is now disabled in this channel")

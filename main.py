@@ -111,6 +111,36 @@ async def on_message(message):
                             with open('serverSettings', 'w') as jsonWrite:
                                 json.dump(sSetting, jsonWrite)
                             await client.send_message(message.channel, "Promotion of discord servers is now disabled in this channel")
+                        elif msg[1].lower() == "all":
+                            if msg[2].lower() == "true":
+                                valid = True
+                                chge = True
+                            elif msg[2].lower() == "false":
+                                valid = True
+                                chge = False
+                            else:
+                                valid = False
+
+                            if valid:
+                                for cha in message.server.channels:
+                                    print(cha.type)
+                                    if cha.type == discord.ChannelType.text:
+                                        try:
+                                            sSetting[message.server.id][cha.id]['canPromoteDiscord'] = chge
+                                        except:
+                                            try:
+                                                sSetting[message.server.id][cha.id]['canPromoteDiscord'] = chge
+                                            except:
+                                                try:
+                                                    sSetting[message.server.id][cha.id] = {}
+                                                    sSetting[message.server.id][cha.id]['canPromoteDiscord'] = chge
+                                                except:
+                                                    sSetting[message.server.id] = {}
+                                                    sSetting[message.server.id][cha.id] = {}
+                                                    sSetting[message.server.id][cha.id]['canPromoteDiscord'] = chge
+                                with open('serverSettings', 'w') as jsonWrite:
+                                    json.dump(sSetting, jsonWrite)
+
 
                 #If the bot is mentioned repsond with the chatterbot
                 if '<@273529250689318923>' in message.content:

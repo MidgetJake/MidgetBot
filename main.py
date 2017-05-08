@@ -141,10 +141,47 @@ async def on_message(message):
                                 with open('serverSettings', 'w') as jsonWrite:
                                     json.dump(sSetting, jsonWrite)
 
+                if msg[0] == "!chatBot" or msg[0] == "!cb":
+                    if (message.author.permissions_in(message.channel).administrator):
+                        with open('serverSettings') as jsonLoad:
+                            cbChan = json.load(jsonLoad)
+                        if msg[1].lower() == 'enable':
+                            try:
+                                cbChan[message.server.id][message.channel.id]['canChatBot'] = True
+                            except:
+                                try:
+                                    cbChan[message.server.id][message.channel.id] = {}
+                                    cbChan[message.server.id][message.channel.id]['canChatBot'] = True
+                                except:
+                                    cbChan[message.server.id] = {}
+                                    cbChan[message.server.id][message.channel.id] = {}
+                                    cbChan[message.server.id][message.channel.id]['canChatBot'] = True
+                        elif msg[1].lower() == 'disable':
+                            try:
+                                cbChan[message.server.id][message.channel.id]['canChatBot'] = False
+                            except:
+                                try:
+                                    cbChan[message.server.id][message.channel.id] = {}
+                                    cbChan[message.server.id][message.channel.id]['canChatBot'] = False
+                                except:
+                                    cbChan[message.server.id] = {}
+                                    cbChan[message.server.id][message.channel.id] = {}
+                                    cbChan[message.server.id][message.channel.id]['canChatBot'] = False
+                        with open('serverSettings', 'w') as jsonWrite:
+                            json.dump(cbChan, jsonWrite)
+
 
                 #If the bot is mentioned repsond with the chatterbot
                 if '<@273529250689318923>' in message.content:
-                    await client.send_message(message.channel, botChat.botChat(message.content))
+                    with open('serverSettings') as jsonLoad:
+                        cbChan = json.load(jsonLoad)
+                    try:
+                        chatIn = cbChan[message.server.id][message.channel.id]['canChatBot']
+                    except:
+                        chatIn = True
+                    print(chatIn)
+                    if chatIn:
+                        await client.send_message(message.channel, botChat.botChat(message.content))
 
                 # Returns a random number up to the range specified by user
                 if msg[0] == '!rand':

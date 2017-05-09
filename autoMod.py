@@ -88,9 +88,10 @@ def checkForYoutube(msg):
         canProm = True
     if not canProm:
         if 'youtube.com/' in msg.content or 'youtu.be/' in msg.content:
-            if (msg.author.permissions_in(msg.channel).administrator):
-                print('Admin can do this k?')
-                return False
-            else:
-                return True
+            if 'user' in msg.content or '.com/c' in msg.content:
+                if (msg.author.permissions_in(msg.channel).administrator):
+                    print('Admin can do this k?')
+                    return False
+                else:
+                    return True
         return False

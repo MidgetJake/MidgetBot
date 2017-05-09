@@ -1,4 +1,3 @@
-import discord
 import json
 import bannedWords
 
@@ -6,6 +5,7 @@ def doChecks(msg):
     checkList = []
     checkList.append(checkIfBanned(msg))
     checkList.append(checkForDiscordProm(msg))
+    checkList.append(checkForYoutube(msg))
     print(checkList)
     if True in checkList:
         return True
@@ -69,3 +69,28 @@ def checkForDiscordProm(msg):
                 return True
 
     return False
+
+def checkForYoutube(msg):
+    with open('serverSettings') as jsonLoad:
+        sSetting = json.load(jsonLoad)
+
+    try:
+        canProm = sSetting[msg.server.id][msg.channel.id]['canPromoteYT']
+    except:
+        try:
+            sSetting[msg.server.id][msg.channel.id] = {}
+            sSetting[msg.server.id][msg.channel.id]['canPromoteYT'] = True
+        except:
+            sSetting[msg.server.id] = {}
+            sSetting[msg.server.id][msg.channel.id] = {}
+        with open('serverSettings', 'w') as jsonWrite:
+            json.dump(sSetting, jsonWrite)
+        canProm = True
+    if not canProm:
+        if 'youtube.com/' in msg.content or 'youtu.be/' in msg.content:
+            if (msg.author.permissions_in(msg.channel).administrator):
+                print('Admin can do this k?')
+                return False
+            else:
+                return True
+        return False

@@ -47,25 +47,23 @@ def checkForDiscordProm(msg):
         sSetting = json.load(jsonLoad)
 
     try:
-        canProm = sSetting[msg.server.id][msg.channel.id]['canPromoteDiscord'] = True
+        canProm = sSetting[msg.server.id][msg.channel.id]['canPromoteDiscord']
     except:
         try:
+            sSetting[msg.server.id][msg.channel.id] = {}
             sSetting[msg.server.id][msg.channel.id]['canPromoteDiscord'] = True
         except:
-            try:
-                sSetting[msg.server.id][msg.channel.id] = {}
-                sSetting[msg.server.id][msg.channel.id]['canPromoteDiscord'] = True
-            except:
-                sSetting[msg.server.id] = {}
-                sSetting[msg.server.id][msg.channel.id] = {}
-                sSetting[msg.server.id][msg.channel.id]['canPromoteDiscord'] = True
+            sSetting[msg.server.id] = {}
+            sSetting[msg.server.id][msg.channel.id] = {}
+            sSetting[msg.server.id][msg.channel.id]['canPromoteDiscord'] = True
         with open('serverSettings', 'w') as jsonWrite:
             json.dump(sSetting, jsonWrite)
         canProm = True
 
     if not canProm:
-        if "discord.gg/" in msg.content:
+        if 'discord.gg/' in msg.content:
             if (msg.author.permissions_in(msg.channel).administrator):
+                print('Admin can do this k?')
                 return False
             else:
                 return True

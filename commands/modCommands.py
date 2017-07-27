@@ -44,6 +44,11 @@ async def checkCommand(message, client):
                     slowTime = int(float(msg[1]))
                     sSettings = checkJson(sSettings, 'slowMode', message, True)
                     sSettings = checkJson(sSettings, 'slowTime', message, slowTime)
+                    with open('slowModeChannels', 'r') as rf:
+                        slowChan = json.load(rf)
+                    slowChan[message.channel.id] = {}
+                    with open('slowModeChannels', 'w') as wf:
+                        json.dump(slowChan, wf)
                     await client.send_message(message.channel, 'Slow mode is now enabled with a timer of: ' + msg[1] + ' seconds!')
                 except:
                     pass

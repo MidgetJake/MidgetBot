@@ -5,8 +5,8 @@ import time
 
 import discord
 
-import tokenKeys
 from commands import chatBot, globalCommands, modCommands, promotions, ytStream
+from config import tokenKeys
 from modules import autoMod, youtubeChecker
 
 client = discord.Client()
@@ -53,7 +53,7 @@ async def on_message(message):
 
 
 def constCheck(clienter):
-    with open('doneAnnounce') as announced:
+    with open('config/doneAnnounce') as announced:
         content = announced.readlines()
     # you may also want to remove whitespace characters like `\n` at the end of each line
     prevLive = [x.strip('\n') for x in content]
@@ -61,9 +61,9 @@ def constCheck(clienter):
     while(True):
         currLive = []
         time.sleep(60)
-        with open('onCooldown') as jsonLoad:
+        with open('config/onCooldown') as jsonLoad:
             cdJson = json.load(jsonLoad)
-        with open('serverStreamConfig') as jsonLoad:
+        with open('config/serverStreamConfig') as jsonLoad:
             configJson = json.load(jsonLoad)
         cdList = []
         for dChansK, dChansV in cdJson.items():
@@ -112,11 +112,11 @@ def constCheck(clienter):
                 else:
                     pass
             prevLive = newPrevLive
-            open('doneAnnounce', 'w').close()
-            with open('doneAnnounce', 'w') as announced:
+            open('config/doneAnnounce', 'w').close()
+            with open('config/doneAnnounce', 'w') as announced:
                 for item in prevLive:
                     announced.write("%s\n" % item)
-            with open('onCooldown', 'w') as jsonWrite:
+            with open('config/onCooldown', 'w') as jsonWrite:
                 json.dump(cdJson, jsonWrite)
     return 1
 

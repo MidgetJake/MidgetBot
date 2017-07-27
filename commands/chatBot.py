@@ -7,7 +7,7 @@ async def checkCommand(message, client):
     msg = message.content.split()
     if msg[0] == "!chatBot" or msg[0] == "!cb":
         if (message.author.permissions_in(message.channel).administrator):
-            with open('serverSettings') as jsonLoad:
+            with open('config/serverSettings') as jsonLoad:
                 cbChan = json.load(jsonLoad)
             if msg[1].lower() == 'enable':
                 cbChan = checkJson(cbChan, 'canChatBot', message, True)
@@ -18,7 +18,7 @@ async def checkCommand(message, client):
                     cbChan = checkJson(cbChan, 'expChatBot', message, True)
                 elif msg[2].lower() == 'disable':
                     cbChan = checkJson(cbChan, 'expChatBot', message, False)
-            with open('serverSettings', 'w') as jsonWrite:
+            with open('config/serverSettings', 'w') as jsonWrite:
                 json.dump(cbChan, jsonWrite)
 
 
@@ -28,7 +28,7 @@ async def checkCommand(message, client):
 async def chatBotTalk(message, client):
     # If the bot is mentioned repsond with the chatterbot
     if '<@273529250689318923>' in message.content:
-        with open('serverSettings') as jsonLoad:
+        with open('config/serverSettings') as jsonLoad:
             cbChan = json.load(jsonLoad)
         try:
             chatIn = cbChan[message.server.id][message.channel.id]['canChatBot']

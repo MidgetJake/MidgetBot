@@ -1,5 +1,7 @@
 import json
-import bannedWords
+
+from config import bannedWords
+
 
 def doChecks(msg):
     checkList = []
@@ -13,10 +15,10 @@ def doChecks(msg):
         return False
 
 def checkIfBanned(msg):
-    with open('serverBannedWords') as jsonLoad:
+    with open('config/serverBannedWords') as jsonLoad:
         bWords = json.load(jsonLoad)
 
-    with open('serverSettings') as jsonLoad:
+    with open('config/serverSettings') as jsonLoad:
         sSetting = json.load(jsonLoad)
 
     try:
@@ -43,7 +45,7 @@ def checkIfBanned(msg):
     return False
 
 def checkForDiscordProm(msg):
-    with open('serverSettings') as jsonLoad:
+    with open('config/serverSettings') as jsonLoad:
         sSetting = json.load(jsonLoad)
 
     try:
@@ -56,7 +58,7 @@ def checkForDiscordProm(msg):
             sSetting[msg.server.id] = {}
             sSetting[msg.server.id][msg.channel.id] = {}
             sSetting[msg.server.id][msg.channel.id]['canPromoteDiscord'] = True
-        with open('serverSettings', 'w') as jsonWrite:
+        with open('config/serverSettings', 'w') as jsonWrite:
             json.dump(sSetting, jsonWrite)
         canProm = True
 
@@ -71,7 +73,7 @@ def checkForDiscordProm(msg):
     return False
 
 def checkForYoutube(msg):
-    with open('serverSettings') as jsonLoad:
+    with open('config/serverSettings') as jsonLoad:
         sSetting = json.load(jsonLoad)
 
     try:
@@ -83,7 +85,7 @@ def checkForYoutube(msg):
         except:
             sSetting[msg.server.id] = {}
             sSetting[msg.server.id][msg.channel.id] = {}
-        with open('serverSettings', 'w') as jsonWrite:
+        with open('config/serverSettings', 'w') as jsonWrite:
             json.dump(sSetting, jsonWrite)
         canProm = True
     if not canProm:

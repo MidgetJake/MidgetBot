@@ -1,11 +1,14 @@
-import tokenKeys
-import requests
 import json
 from urllib import request
 
+import requests
+
+from config import tokenKeys
+
+
 def isLive(chanID):
     urlRequest = requests.get('https://www.googleapis.com/youtube/v3/search',
-                           params={'part': 'snippet',
+                              params={'part': 'snippet',
                                    'channelId': chanID,
                                    'type': 'video',
                                    'eventType': 'live',
@@ -34,7 +37,7 @@ def isLive(chanID):
 def findLiveChans(cdList):
     calls = 0
     channels = []
-    with open('serverYTSetup') as jsonOpen:
+    with open('config/serverYTSetup') as jsonOpen:
         jsonData = json.load(jsonOpen)
     tmpChan = []
     gotChan = []
@@ -64,7 +67,7 @@ def findLiveChans(cdList):
 
 def doesChanExist(chanID):
     urlRequest= requests.get('https://www.googleapis.com/youtube/v3/search',
-                           params={'part' : 'snippet',
+                             params={'part' : 'snippet',
                                     'channelId': chanID,
                                     'type': 'channel',
                                      'key': tokenKeys.google})

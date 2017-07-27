@@ -5,9 +5,9 @@ async def checkCommand(message, client):
     msg = message.content.split()
     #Because of limited api calls only I can create a youtube stream listener
     if message.author.id == '95677195162222592' and msg[0].lower() == '!setupyt':
-        with open('onCooldown') as jsonLoad:
+        with open('config/onCooldown') as jsonLoad:
             cdJson = json.load(jsonLoad)
-        with open('serverYTSetup') as jsonfile:
+        with open('config/serverYTSetup') as jsonfile:
             jsonTmp = json.load(jsonfile)
         try:
             jsonTmp[message.channel.id].append(msg[1])
@@ -18,7 +18,7 @@ async def checkCommand(message, client):
                 cdJson[message.channel.id][msg[1]] = 0
         except:
             jsonTmp[message.channel.id] = [msg[1]]
-            with open('serverStreamConfig') as jsonLoad:
+            with open('config/serverStreamConfig') as jsonLoad:
                 jsonConfig = json.load(jsonLoad)
             jsonConfig[message.channel.id] = {}
             jsonConfig[message.channel.id]['imgThumb'] = True
@@ -27,13 +27,13 @@ async def checkCommand(message, client):
             jsonConfig[message.channel.id]['cooldown'] = 5
             cdJson[message.channel.id] = {}
             cdJson[message.channel.id][msg[1]] = 0
-            with open('serverStreamConfig', 'w') as jsonLoad:
+            with open('config/serverStreamConfig', 'w') as jsonLoad:
                 json.dump(jsonConfig, jsonLoad)
             print(jsonConfig)
         print(jsonTmp)
-        with open('onCooldown', 'w') as jsonfile:
+        with open('config/onCooldown', 'w') as jsonfile:
             json.dump(cdJson, jsonfile)
-        with open('serverYTSetup', 'w') as jsonfile:
+        with open('config/serverYTSetup', 'w') as jsonfile:
             json.dump(jsonTmp, jsonfile)
         await client.send_message(message.channel, 'Channel: \''+msg[1]+'\' added to listener')
 
@@ -41,7 +41,7 @@ async def checkCommand(message, client):
 
 
     if msg[0].lower() == '!streamcfg':
-        with open('serverStreamConfig') as jsonLoad:
+        with open('config/serverStreamConfig') as jsonLoad:
             configJson = json.load(jsonLoad)
         checking = corrector.cmdChecker(msg)
         if not checking:
@@ -63,7 +63,7 @@ async def checkCommand(message, client):
                 configJson[message.channel.id]['ytGaming'] = True
                 configJson[message.channel.id]['mention'] = 'everyone'
                 configJson[message.channel.id]['cooldown'] = 5
-                with open('serverStreamConfig', 'w') as jsonLoad:
+                with open('config/serverStreamConfig', 'w') as jsonLoad:
                     json.dump(configJson, jsonLoad)
                 print(configJson)
                 await client.send_message(message.channel, 'Stream config has been reset')
@@ -78,7 +78,7 @@ async def checkCommand(message, client):
                           )
                 else:
                     configJson[message.channel.id]['mention'] = msg[2].lower()
-                    with open('serverStreamConfig', 'w') as jsonLoad:
+                    with open('config/serverStreamConfig', 'w') as jsonLoad:
                         json.dump(configJson, jsonLoad)
                     await client.send_message(message.channel,
                                 'Cofig updated!\n'
@@ -98,7 +98,7 @@ async def checkCommand(message, client):
                         configJson[message.channel.id]['imgThumb'] = True
                     else:
                         configJson[message.channel.id]['imgThumb'] = False
-                    with open('serverStreamConfig', 'w') as jsonLoad:
+                    with open('config/serverStreamConfig', 'w') as jsonLoad:
                         json.dump(configJson, jsonLoad)
                     await client.send_message(message.channel,
                                 'Cofig updated!\n'
@@ -118,7 +118,7 @@ async def checkCommand(message, client):
                         configJson[message.channel.id]['ytGaming'] = True
                     else:
                         configJson[message.channel.id]['ytGaming'] = False
-                    with open('serverStreamConfig', 'w') as jsonLoad:
+                    with open('config/serverStreamConfig', 'w') as jsonLoad:
                         json.dump(configJson, jsonLoad)
                     await client.send_message(message.channel,
                                 'Cofig updated!\n'

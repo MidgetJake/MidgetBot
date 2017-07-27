@@ -1,12 +1,11 @@
-import asyncio
-import discord
+from commands.helpers import checkJson
 import json
 
 async def checkCommand(message, client):
-    msg = message.content.split()
-    if msg[0] == "!bannedWords" or msg[0] == "!bw":
-        if message.author.permissions_in(message.channel).administrator:
-            with open('serverBannedWords') as jsonLoad:
+    if message.author.permissions_in(message.channel).administrator:
+        msg = message.content.split()
+        if msg[0] == "!bannedWords" or msg[0] == "!bw":
+            with open('config/serverBannedWords') as jsonLoad:
                 bWords = json.load(jsonLoad)
             try:
                 bList = bWords[message.server.id][message.channel.id]
@@ -28,9 +27,24 @@ async def checkCommand(message, client):
                     except:
                         bWords[message.server.id] = {}
                         bWords[message.server.id][message.channel.id] = bList
-                with open('serverBannedWords', 'w') as jsonWrite:
+                with open('config/serverBannedWords', 'w') as jsonWrite:
                     json.dump(bWords, jsonWrite)
                 await client.send_message(message.channel, "Added new words to the banned list!")
-        else:
-            await client.send_message(message.channel, "You do not have permission to run this command")
+
+        if msg[0] == "!slow" or msg[0] == "!slowmode":
+            with open('config/serverSettings', 'r') as rf:
+                sSettings = json.load(rf)
+
+            if msg[1].lower() == 'off':
+                sSettings = checkJson(sSettings, 'slowMode', message, False)
+            else:
+                try:
+                    slowTime = int(float(msg[1]))
+                    sSettings = checkJson(sSettings, 'slowMode', message, True)
+                    sSettings = checkJson(sSettings, 'slowTime', message, slowTime)
+                except:
+                    pass
+            with open('config/serverSettings', 'w') as wf:
+                json.dump(sSettings, wf)
+
 

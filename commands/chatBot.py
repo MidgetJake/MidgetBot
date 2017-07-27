@@ -58,4 +58,7 @@ def botChat(message):
     if not send:
         return "Don't give me silence..."
     else:
-        return bot2session.think(send)
+        try:
+            return bot2session.think(send)
+        except:
+            return 'It seems that the chatbot API is down. Who knows when it will be back up ¯\_(ツ)_/¯'

@@ -37,11 +37,14 @@ async def checkCommand(message, client):
 
             if msg[1].lower() == 'off':
                 sSettings = checkJson(sSettings, 'slowMode', message, False)
+                sSettings = checkJson(sSettings, 'slowTime', message, 0)
+                await client.send_message(message.channel, 'Slow mode is now disabled')
             else:
                 try:
                     slowTime = int(float(msg[1]))
                     sSettings = checkJson(sSettings, 'slowMode', message, True)
                     sSettings = checkJson(sSettings, 'slowTime', message, slowTime)
+                    await client.send_message(message.channel, 'Slow mode is now enabled with a timer of: ' + msg[1] + ' seconds!')
                 except:
                     pass
             with open('config/serverSettings', 'w') as wf:

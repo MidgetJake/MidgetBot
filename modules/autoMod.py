@@ -1,18 +1,21 @@
 import json
-
+from time import time
 from config import bannedWords
+from commands.helpers import checkJson
 
 
 def doChecks(msg):
-    checkList = []
-    checkList.append(checkIfBanned(msg))
-    checkList.append(checkForDiscordProm(msg))
-    checkList.append(checkForYoutube(msg))
-    print(checkList)
-    if True in checkList:
-        return True
-    else:
-        return False
+    if not msg.author.permissions_in(msg.channel).administrator:
+        checkList = []
+        checkList.append(slowMode(msg))
+        checkList.append(checkIfBanned(msg))
+        checkList.append(checkForDiscordProm(msg))
+        checkList.append(checkForYoutube(msg))
+        print(checkList)
+        if True in checkList:
+            return True
+        else:
+            return False
 
 def checkIfBanned(msg):
     with open('config/serverBannedWords') as jsonLoad:
@@ -97,3 +100,34 @@ def checkForYoutube(msg):
                 else:
                     return True
         return False
+
+def slowMode(msg):
+    with open('config/serverSettings', 'r') as rf:
+        sSettings = json.load(rf)
+
+    try:
+        isSlow = sSettings[msg.server.id][msg.channel.id]['slowMode']
+    except:
+        sSettings = checkJson(sSettings, 'slowMode', msg, False)
+        sSettings = checkJson(sSettings, 'slowTime', msg, 0)
+        isSlow = False
+
+    if isSlow:
+        sTime = sSettings[msg.server.id][msg.channel.id]['slowTime']
+        with open('config/slowModeChannels', 'r') as rf:
+            slowChan = json.load(rf)
+        try:
+            if time() - (slowChan[msg.channel.id][msg.author.id] + sTime) > 0:
+                slowChan[msg.channel.id][msg.author.id] = time()
+            else:
+                print('Deleting message')
+                return True
+        except:
+            try:
+                slowChan[msg.channel.id][msg.author.id] = time()
+            except:
+                slowChan[msg.channel.id] = {}
+                slowChan[msg.channel.id][msg.author.id] = time()
+        with open('config/slowModeChannels', 'w') as wf:
+            json.dump(slowChan, wf)
+    return False

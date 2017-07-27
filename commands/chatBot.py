@@ -1,5 +1,6 @@
 from chatterbotapi import ChatterBotFactory, ChatterBotType
 from ExpChatBot import chat
+from commands.helpers import checkJson
 import json
 
 async def checkCommand(message, client):
@@ -9,52 +10,20 @@ async def checkCommand(message, client):
             with open('serverSettings') as jsonLoad:
                 cbChan = json.load(jsonLoad)
             if msg[1].lower() == 'enable':
-                try:
-                    cbChan[message.server.id][message.channel.id]['canChatBot'] = True
-                except:
-                    try:
-                        cbChan[message.server.id][message.channel.id] = {}
-                        cbChan[message.server.id][message.channel.id]['canChatBot'] = True
-                    except:
-                        cbChan[message.server.id] = {}
-                        cbChan[message.server.id][message.channel.id] = {}
-                        cbChan[message.server.id][message.channel.id]['canChatBot'] = True
+                cbChan = checkJson(cbChan, 'canChatBot', message, True)
             elif msg[1].lower() == 'disable':
-                try:
-                    cbChan[message.server.id][message.channel.id]['canChatBot'] = False
-                except:
-                    try:
-                        cbChan[message.server.id][message.channel.id] = {}
-                        cbChan[message.server.id][message.channel.id]['canChatBot'] = False
-                    except:
-                        cbChan[message.server.id] = {}
-                        cbChan[message.server.id][message.channel.id] = {}
-                        cbChan[message.server.id][message.channel.id]['canChatBot'] = False
+                cbChan = checkJson(cbChan, 'canChatBot', message, False)
             elif msg[1].lower() == 'exp':
                 if msg[2].lower() == 'enable':
-                    try:
-                        cbChan[message.server.id][message.channel.id]['expChatBot'] = True
-                    except:
-                        try:
-                            cbChan[message.server.id][message.channel.id] = {}
-                            cbChan[message.server.id][message.channel.id]['expChatBot'] = True
-                        except:
-                            cbChan[message.server.id] = {}
-                            cbChan[message.server.id][message.channel.id] = {}
-                            cbChan[message.server.id][message.channel.id]['expChatBot'] = True
+                    cbChan = checkJson(cbChan, 'expChatBot', message, True)
                 elif msg[2].lower() == 'disable':
-                    try:
-                        cbChan[message.server.id][message.channel.id]['expChatBot'] = False
-                    except:
-                        try:
-                            cbChan[message.server.id][message.channel.id] = {}
-                            cbChan[message.server.id][message.channel.id]['expChatBot'] = False
-                        except:
-                            cbChan[message.server.id] = {}
-                            cbChan[message.server.id][message.channel.id] = {}
-                            cbChan[message.server.id][message.channel.id]['expChatBot'] = False
+                    cbChan = checkJson(cbChan, 'expChatBot', message, False)
             with open('serverSettings', 'w') as jsonWrite:
                 json.dump(cbChan, jsonWrite)
+
+
+
+
 
 async def chatBotTalk(message, client):
     # If the bot is mentioned repsond with the chatterbot
@@ -78,10 +47,6 @@ async def chatBotTalk(message, client):
                 await client.send_message(message.channel, chat.takeMsg(message.content))
             else:
                 await client.send_message(message.channel, botChat(message.content))
-
-
-
-
 
 
 

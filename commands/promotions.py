@@ -1,3 +1,4 @@
+from commands.helpers import checkJson
 import discord
 import json
 
@@ -8,36 +9,12 @@ async def checkCommand(message, client):
             with open('serverSettings') as jsonLoad:
                 sSetting = json.load(jsonLoad)
             if msg[1].lower() == "enable":
-                try:
-                    sSetting[message.server.id][message.channel.id]['canPromoteDiscord'] = True
-                except:
-                    try:
-                        sSetting[message.server.id][message.channel.id]['canPromoteDiscord'] = True
-                    except:
-                        try:
-                            sSetting[message.server.id][message.channel.id] = {}
-                            sSetting[message.server.id][message.channel.id]['canPromoteDiscord'] = True
-                        except:
-                            sSetting[message.server.id] = {}
-                            sSetting[message.server.id][message.channel.id] = {}
-                            sSetting[message.server.id][message.channel.id]['canPromoteDiscord'] = True
+                sSetting = checkJson(sSetting, 'canPromoteDiscord', message, True)
                 with open('serverSettings', 'w') as jsonWrite:
                     json.dump(sSetting, jsonWrite)
                 await client.send_message(message.channel, "Promotion of discord servers is now enabled in this channel")
             elif msg[1].lower() == "disable":
-                try:
-                    sSetting[message.server.id][message.channel.id]['canPromoteDiscord'] = False
-                except:
-                    try:
-                        sSetting[message.server.id][message.channel.id]['canPromoteDiscord'] = False
-                    except:
-                        try:
-                            sSetting[message.server.id][message.channel.id] = {}
-                            sSetting[message.server.id][message.channel.id]['canPromoteDiscord'] = False
-                        except:
-                            sSetting[message.server.id] = {}
-                            sSetting[message.server.id][message.channel.id] = {}
-                            sSetting[message.server.id][message.channel.id]['canPromoteDiscord'] = False
+                sSetting = checkJson(sSetting, 'canPromoteDiscord', message, False)
                 with open('serverSettings', 'w') as jsonWrite:
                     json.dump(sSetting, jsonWrite)
                 await client.send_message(message.channel, "Promotion of discord servers is now disabled in this channel")
@@ -78,28 +55,9 @@ async def checkCommand(message, client):
             with open('serverSettings') as jsonLoad:
                 sSettings = json.load(jsonLoad)
             if msg[1].lower() == 'enable':
-                try:
-                    sSettings[message.server.id][message.channel.id]['canPromoteYT'] = True
-                except:
-                    try:
-                        sSettings[message.server.id][message.channel.id] = {}
-                        sSettings[message.server.id][message.channel.id]['canPromoteYT'] = True
-                    except:
-                        sSettings[message.server.id] = {}
-                        sSettings[message.server.id][message.channel.id] = {}
-                        sSettings[message.server.id][message.channel.id]['canPromoteYT'] = True
+                sSettings = checkJson(sSettings, 'canPromoteYT', message, True)
             elif msg[1].lower() == 'disable':
-                try:
-                    sSettings[message.server.id][message.channel.id]['canPromoteYT'] = False
-                except:
-                    try:
-                        sSettings[message.server.id][message.channel.id] = {}
-                        sSettings[message.server.id][message.channel.id]['canPromoteYT'] = False
-                    except:
-                        sSettings[message.server.id] = {}
-                        sSettings[message.server.id][message.channel.id] = {}
-                        sSettings[message.server.id][message.channel.id]['canPromoteYT'] = False
-            # print(sSettings[message.server.id][message.channel.id]['canPromoteYT'])
+                sSettings = checkJson(sSettings, 'canPromoteYT', message, False)
             elif msg[1].lower() == "all":
                 if msg[2].lower() == "enable":
                     valid = True

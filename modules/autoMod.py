@@ -5,7 +5,7 @@ from commands.helpers import checkJson
 
 
 def doChecks(msg):
-    if not msg.author.permissions_in(msg.channel).administrator:
+    if msg.author.permissions_in(msg.channel).administrator:
         checkList = []
         checkList.append(isMuted(msg))
         checkList.append(slowMode(msg))
@@ -19,27 +19,39 @@ def doChecks(msg):
             return False
 
 def checkIfBanned(msg):
-    with open('config/serverBannedWords') as jsonLoad:
-        bWords = json.load(jsonLoad)
+    with open('config/serverHardBannedWords') as jsonLoad:
+        hardBWords = json.load(jsonLoad)
+
+    with open('config/serverSoftBannedWords') as jsonLoad:
+        softBWords = json.load(jsonLoad)
 
     with open('config/serverSettings') as jsonLoad:
         sSetting = json.load(jsonLoad)
 
     try:
-        bList = bWords[msg.server.id][msg.channel.id]
+        hardBList = hardBWords[msg.server.id]
     except:
-        bList = []
+        hardBList = []
+
+    try:
+        softBList = softBWords[msg.server.id]
+    except:
+        softBList = []
 
     try:
         if sSetting[msg.server.id][msg.channel.id]["preSetBannedWords"] == True:
-            bList = bList + bannedWords.defaultBans
+            softBList = softBList + bannedWords.defaultBans
     except:
         pass
+
+    for bWord in hardBList:
+        if bWord in msg.content:
+            return True
 
     msgSplit = msg.content.split()
 
     for word in msgSplit:
-        if word.lower() in bList:
+        if word.lower() in softBList:
             try:
                 print("Deleting: " + msg.content)
                 return True

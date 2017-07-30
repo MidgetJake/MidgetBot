@@ -14,31 +14,37 @@ async def checkCommand(message, client):
         msg = message.content.split()
         try:
             if msg[0] == "!bannedWords" or msg[0] == "!bw":
-                with open('config/serverBannedWords') as jsonLoad:
-                    bWords = json.load(jsonLoad)
+                with open('config/serverHardBannedWords') as jsonLoad:
+                    hBWords = json.load(jsonLoad)
                 try:
-                    bList = bWords[message.server.id][message.channel.id]
-                    chanAvail = True
+                    hBList = hBWords[message.server.id]
                 except KeyError:
-                    chanAvail = False
-                    bList = []
+                    hBList = []
+
+                with open('config/serverSoftBannedWords') as jsonLoad:
+                    sBWords = json.load(jsonLoad)
+                try:
+                    sBList = sBWords[message.server.id]
+                except KeyError:
+                    sBList = []
 
                 if msg[1] == "show":
-                    await client.send_message(message.channel, bList)
-                elif msg[1] == "add":
-                    addWords = msg[2::]
-                    bList = bList + addWords
-                    if chanAvail:
-                        bWords[message.server.id][message.channel.id] = bList
+                    pass
+                    #await client.send_message(message.channel, bList)
+                elif msg[1] == "-a":
+                    if msg[2] == "-h":
+                        addWords = msg[3::]
+                        hBList = hBList + addWords
+                        hBWords[message.server.id] = hBList
+                        with open('config/serverHardBannedWords', 'w') as jsonWrite:
+                            json.dump(hBWords, jsonWrite)
+                        #await client.send_message(message.channel, "Added new words to the banned list!")
                     else:
-                        try:
-                            bWords[message.server.id][message.channel.id] = bList
-                        except:
-                            bWords[message.server.id] = {}
-                            bWords[message.server.id][message.channel.id] = bList
-                    with open('config/serverBannedWords', 'w') as jsonWrite:
-                        json.dump(bWords, jsonWrite)
-                    await client.send_message(message.channel, "Added new words to the banned list!")
+                        addWords = msg[2::]
+                        sBList = sBList + addWords
+                        sBWords[message.server.id] = sBList
+                        with open('config/serverSoftBannedWords', 'w') as jsonWrite:
+                            json.dump(sBWords, jsonWrite)
 
             if msg[0] == "!slow" or msg[0] == "!slowmode":
                 with open('config/serverSettings', 'r') as rf:

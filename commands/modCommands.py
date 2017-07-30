@@ -1,3 +1,11 @@
+# Todo:
+#       - Detect role in server and allow mods to assign roles to commands
+#       - !muteall <user> | Mute a user in all channels
+#       - !slowall <time> | Enable slowmode in all channels
+#       - !timeout <user> <seconds> | Mutes user for a period of time
+#       - !clear <no. messages> | Deletes the last number of messages
+#       - !bannedWords remove <[words]> | Allow banned words to be removed
+
 from commands.helpers import checkJson
 import json
 
@@ -55,4 +63,22 @@ async def checkCommand(message, client):
             with open('config/serverSettings', 'w') as wf:
                 json.dump(sSettings, wf)
 
+        if msg[0] == '!mute':
+            with open('config/mutedUsers', 'r') as rf:
+                mUsers = json.load(rf)
 
+            for user in message.mentions:
+                mUsers = checkJson(mUsers, user.id, message, True)
+
+            with open('config/mutedUsers', 'w') as wf:
+                json.dump(mUsers, wf)
+
+        if msg[0] == '!unmute':
+            with open('config/mutedUsers', 'r') as rf:
+                mUsers = json.load(rf)
+
+            for user in message.mentions:
+                mUsers = checkJson(mUsers, user.id, message, False)
+
+            with open('config/mutedUsers', 'w') as wf:
+                json.dump(mUsers, wf)

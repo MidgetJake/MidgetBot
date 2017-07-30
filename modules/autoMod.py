@@ -7,6 +7,7 @@ from commands.helpers import checkJson
 def doChecks(msg):
     if not msg.author.permissions_in(msg.channel).administrator:
         checkList = []
+        checkList.append(isMuted(msg))
         checkList.append(slowMode(msg))
         checkList.append(checkIfBanned(msg))
         checkList.append(checkForDiscordProm(msg))
@@ -131,3 +132,15 @@ def slowMode(msg):
         with open('config/slowModeChannels', 'w') as wf:
             json.dump(slowChan, wf)
     return False
+
+def isMuted(msg):
+    with open('config/mutedUsers', 'r') as rf:
+        mUsers = json.load(rf)
+
+    try:
+        if mUsers[msg.server.id][msg.channel.id][msg.author.id]:
+            return True
+        else:
+            return False
+    except:
+        return False

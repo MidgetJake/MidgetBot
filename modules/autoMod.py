@@ -5,7 +5,7 @@ from commands.helpers import checkJson
 
 
 def doChecks(msg):
-    if msg.author.permissions_in(msg.channel).administrator:
+    if not msg.author.permissions_in(msg.channel).administrator:
         checkList = []
         checkList.append(isMuted(msg))
         checkList.append(slowMode(msg))

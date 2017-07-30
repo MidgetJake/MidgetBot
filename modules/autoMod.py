@@ -45,7 +45,7 @@ def checkIfBanned(msg):
         pass
 
     for bWord in hardBList:
-        if bWord in msg.content:
+        if bWord in msg.content.lower():
             return True
 
     msgSplit = msg.content.split()

@@ -1,10 +1,9 @@
 import _thread
 import asyncio
 import json
-import time
-
+from time import time, sleep
 import discord
-
+from secret import secretThings
 from commands import chatBot, globalCommands, modCommands, promotions, ytStream
 from config import tokenKeys
 from modules import autoMod, youtubeChecker
@@ -25,7 +24,10 @@ async def on_ready():
 async def on_message(message):
 
     msg = message.content.split()
-    print(message.server.name + ' | ' + message.channel.name + ' | ' + message.channel.id + ' | ' + message.author.name + " | " + message.content + " | " + message.author.id)
+    print(str(time()) + ' | ' + message.server.name + ' | ' + message.channel.name + ' | ' + message.channel.id + ' | ' + message.author.name + " | " + message.content + " | " + message.author.id)
+
+    # There are things here that I don't want getting out ;)
+    await secretThings(message, client)
 
     if len(message.attachments) >= 1:
         await client.add_reaction(message, '👍')
@@ -50,8 +52,6 @@ async def on_message(message):
 
 
 
-
-
 def constCheck(clienter):
     with open('config/doneAnnounce') as announced:
         content = announced.readlines()
@@ -60,7 +60,7 @@ def constCheck(clienter):
     #prevLive = []
     while(True):
         currLive = []
-        time.sleep(60)
+        sleep(60)
         with open('config/onCooldown') as jsonLoad:
             cdJson = json.load(jsonLoad)
         with open('config/serverStreamConfig') as jsonLoad:
@@ -68,7 +68,7 @@ def constCheck(clienter):
         cdList = []
         for dChansK, dChansV in cdJson.items():
             for yChansK, yChansV in dChansV.items():
-                if time.time() - ((configJson[dChansK]['cooldown']*60)+yChansV) > 0:
+                if time() - ((configJson[dChansK]['cooldown']*60)+yChansV) > 0:
                     cdList.append(yChansK)
         chanList = youtubeChecker.findLiveChans(cdList)
         if chanList != []:
@@ -102,7 +102,7 @@ def constCheck(clienter):
                         print('shit')
                     try:
                         fut.result()
-                        cdJson[x[0]][x[1][0]] = time.time()
+                        cdJson[x[0]][x[1][0]] = time()
                     except:
                         print("There was an issue with the thread")
             newPrevLive = []

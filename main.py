@@ -3,31 +3,52 @@ import asyncio
 import json
 from time import time, sleep
 import discord
-from secret import secretThings
 from commands import chatBot, globalCommands, modCommands, promotions, ytStream
 from config import tokenKeys
 from modules import autoMod, youtubeChecker
+from modules import database
 
-client = discord.Client()
+try:
+    database.connectToDB()
+    dbConnect = True
+except:
+    dbConnect = False
+
+if dbConnect:
+    client = discord.Client()
+else:
+    print('Unable to connect to database')
+    print('Bot requires a database connection')
 
 @client.event
 async def on_ready():
-    print('Starting the bot:')
-    print(client.user.name)
-    print(client.user.id)
-    print('----------------')
-    #client.loop.create_task(constCheck())
+    servers = len(client.servers)
+    users = len(set(client.get_all_members()))
+
+    print('Any new servers since we were online?')
+    for server in client.servers:
+        try:
+            database.addServer(server)
+        except:
+            pass
+
+    print('---------------------')
+    print('| Started MidgetBot |')
+    print('---------------------')
+    print('| Serving: {} Users'.format(users))
+    print('| In: {} Servers'.format(servers))
+    print('| BotID: {}'.format(client.user.id))
+    print('---------------------')
+
+
+
     _thread.start_new_thread(constCheck, (client,))
-    #startChecker()
 
 @client.event
 async def on_message(message):
 
     msg = message.content.split()
     print(str(time()) + ' | ' + message.server.name + ' | ' + message.channel.name + ' | ' + message.channel.id + ' | ' + message.author.name + " | " + message.content + " | " + message.author.id)
-
-    # There are things here that I don't want getting out ;)
-    await secretThings(message, client)
 
     if len(message.attachments) >= 1:
         await client.add_reaction(message, '👍')
@@ -43,13 +64,17 @@ async def on_message(message):
                 if message.author.id == '95677195162222592' and msg[0] == '!debug':
                     for chan in message.server.channels:
                         print(chan)
-                await chatBot.chatBotTalk(message, client)
-                await ytStream.checkCommand(message, client)
-                await chatBot.checkCommand(message, client)
-                await promotions.checkCommand(message, client)
-                await globalCommands.checkCommand(message, client)
+                await process_command(message, client)
 
 
+
+
+async def process_command(message, client):
+    await chatBot.chatBotTalk(message, client)
+    await ytStream.checkCommand(message, client)
+    await chatBot.checkCommand(message, client)
+    await promotions.checkCommand(message, client)
+    await globalCommands.checkCommand(message, client)
 
 
 def constCheck(clienter):

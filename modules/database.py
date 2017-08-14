@@ -17,6 +17,8 @@ def connectToDB():
     print('Connection successful')
 
 
+
+
 def addServer(server):
     dbName = 'MAIN'
 
@@ -57,6 +59,8 @@ def setupServerDB(server):
                                           'canPromoteYT BOOLEAN DEFAULT TRUE, '
                                           'canPromoteDiscord BOOLEAN DEFAULT TRUE, '
                                           'canChatBot BOOLEAN DEFAULT TRUE,'
+                                          'checkRank BOOLEAN DEFAULT TRUE,'
+                                          'earnXP BOOLEAN DEFAULT TRUE,'
                                           'slowMode BOOLEAN DEFAULT FALSE,'
                                           'slowTime INT DEFAULT 0)')
     for chan in server.channels:
@@ -69,7 +73,8 @@ def setupServerDB(server):
                                        'messagesSent INT DEFAULT 0,'
                                        'level INT DEFAULT 1,'
                                        'xp INT DEFAULT 0,'
-                                       'totalXP INT DEFAULT 0)')
+                                       'totalXP INT DEFAULT 0,'
+                                       'joined TIMESTAMPTZ)')
     for dUser in server.members:
         cursor.execute('INSERT INTO users (ID, NAME) VALUES (%s, %s)', (dUser.id, dUser.name))
 

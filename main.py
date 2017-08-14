@@ -7,6 +7,8 @@ from commands import chatBot, globalCommands, modCommands, promotions, ytStream
 from config import tokenKeys
 from modules import autoMod, youtubeChecker
 from modules import database
+from modules.dataClasses import Server
+from modules.chatXP import canGetXP
 
 try:
     database.connectToDB()
@@ -20,6 +22,9 @@ else:
     print('Unable to connect to database')
     print('Bot requires a database connection')
 
+serverDict = {}
+
+
 @client.event
 async def on_ready():
     servers = len(client.servers)
@@ -31,6 +36,7 @@ async def on_ready():
             database.addServer(server)
         except:
             pass
+        serverDict[server.id] = Server(server)
 
     print('---------------------')
     print('| Started MidgetBot |')
@@ -39,8 +45,6 @@ async def on_ready():
     print('| In: {} Servers'.format(servers))
     print('| BotID: {}'.format(client.user.id))
     print('---------------------')
-
-
 
     _thread.start_new_thread(constCheck, (client,))
 
@@ -65,10 +69,11 @@ async def on_message(message):
                     for chan in message.server.channels:
                         print(chan)
                 await process_command(message, client)
+                canGetXP(message)
 
 
-
-
+# This is where all the commands are processed
+# This will be updated when the bot becomes more customisable between server
 async def process_command(message, client):
     await chatBot.chatBotTalk(message, client)
     await ytStream.checkCommand(message, client)
@@ -77,12 +82,13 @@ async def process_command(message, client):
     await globalCommands.checkCommand(message, client)
 
 
+# This is a huge mess
+# Will clean up in a future update
 def constCheck(clienter):
     with open('config/doneAnnounce') as announced:
         content = announced.readlines()
     # you may also want to remove whitespace characters like `\n` at the end of each line
     prevLive = [x.strip('\n') for x in content]
-    #prevLive = []
     while(True):
         currLive = []
         sleep(60)
@@ -102,7 +108,7 @@ def constCheck(clienter):
                 if configJson[x[0]]['ytGaming']:
                     ytG = 'gaming.'
                 iThmb = configJson[x[0]]['imgThumb']
-                mention=''
+                mention = ''
                 if configJson[x[0]]['mention'] != 'none':
                     mention = '@' + configJson[x[0]]['mention'] + ' | '
 

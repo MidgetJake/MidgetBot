@@ -1,28 +1,35 @@
 # This is all just experimental and won't be worked on too much currently
+# We are using this to save time/resources as calling the database for EVERY message can potentially be slow
+# Although it is still very WiP
 
-class User:
-    def __init__(self, user):
-        self.user = user
-        self.id = user.id
-        self.messagesSent = 0
-        self.level = 1
-        self.xp = 0
-        self.totalXp = 0
-
-    def addXp(self, change):
-        self.xp += change
-        self.totalXp += change
-
-    def checkLevel(self):
-        if self.xp > (self.level*100):
-            self.level += 1
-            self.xp = 0
-
+####################
+# The server class #
+####################
 class Server:
     def __init__(self, server):
         self.server = server
         self.id = server.id
-        self.members = []
+        self.channels = []
+        for channel in server.channels:
+            self.addChannel(channel)
+        print('Server: {} now initialised'.format(self.id))
 
-    def addMember(self, user):
-        self.members.append(User(user))
+    def addChannel(self, channel):
+        self.channels.append(Channel(self.server, channel))
+
+
+#####################
+# The channel class #
+#####################
+class Channel:
+    def __init__(self, server, channel):
+        self.sID = server.id
+        self.id = channel.id
+        self.slow = False
+        self.slowTime = 0
+        self.canPromoteYT = True
+        self.canPromoteDiscord = True
+        self.canChatBot = True
+        self.checkRank = True
+        self.earnXP = True
+        print('Added channel: {}'.format(self.id))

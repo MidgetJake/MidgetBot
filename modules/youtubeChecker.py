@@ -14,7 +14,7 @@ def isLive(chanID):
                                    'eventType': 'live',
                                    'key': tokenKeys.google})
     parsedData = urlRequest.json()
-    print(parsedData)
+    #print(parsedData)
     try:
         title = parsedData['items'][0]['snippet']['title']
         liveLink = parsedData['items'][0]['id']['videoId']
@@ -62,7 +62,7 @@ def findLiveChans(cdList):
             #    data = isLive(ytChan)
             #    if data:
             #        channels.append((channel, data))
-    print(calls)
+    #print(calls)
     return channels
 
 def doesChanExist(chanID):

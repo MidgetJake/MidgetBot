@@ -18,6 +18,7 @@ async def quoteSystem(message, client):
     if msg[0] == '!quote' or msg[0] == '!q':
         if msg[1] == 'add':
             cost = getCommandCost(message, 'quoteAddCost')
+            print(cost)
             if checkPoints(message, cost):
                 server = message.server.id
                 test = 'server_{}'.format(server)
@@ -41,6 +42,8 @@ async def quoteSystem(message, client):
                 embed.set_author(name=message.author.name, icon_url=message.author.avatar_url)
                 await client.send_message(message.channel, embed=embed)
                 print('Quote Added')
+            else:
+                await client.send_message(message.channel, 'You do not have enough points to add a quote. It requires {} points'.format(cost))
         elif msg[1] in ['remove', 'delete', 'rem', 'del']:
             pass
         else:
@@ -69,8 +72,9 @@ async def quoteSystem(message, client):
                 else:
                     await client.send_message(message.channel, 'Quote #{} does not exist!'.format(number))
 
-            except ValueError:
+            except TypeError:
                 pass
+
 
 
 def checkPoints(message, points):
@@ -85,8 +89,8 @@ def checkPoints(message, points):
     uPoints = result[0]
 
     # Mods can make quotes for free!
-    if message.author.permissions_in(message.channel).administrator:
-        return True
+    #if message.author.permissions_in(message.channel).administrator:
+    #    return True
 
     if uPoints >= points:
         newPoints = uPoints - points
@@ -102,7 +106,11 @@ def getCommandCost(message, command):
     conn_string = 'host = {} dbname = {} user = {} password = {}'.format(host, 'MAIN', user, passW)
     conn = postG.connect(conn_string)
     cursor = conn.cursor()
-    cursor.execute('SELECT %s FROM settings WHERE serverID = %s', (command, message.server.id))
+    sID = '{}'.format(message.server.id)
+    cmd = '{}'.format(command)
+    print('This: {} and this: {}'.format(command, sID))
+    cursor.execute('SELECT %s FROM settings WHERE serverID = %s', (cmd, sID))
     result = cursor.fetchone()
+    print('TEEEEE {}'.format(result))
     cost = result[0]
     return cost

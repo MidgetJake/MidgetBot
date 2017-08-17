@@ -61,7 +61,7 @@ def addXP(message):
     tXP += gain
     print('{} has gained {} points!'.format(message.author.name, gain))
     if xp >= (level*150):
-        xp -= (level*150)
+        #xp -= (level*150)
         level += 1
         print('{} has leveled up to level {}!'.format(message.author.name, level))
 

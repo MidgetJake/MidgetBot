@@ -8,7 +8,7 @@ from config import tokenKeys
 from modules import autoMod, youtubeChecker
 from modules import database
 from modules.dataClasses import Server
-from modules.chatXP import canGetXP
+from modules.chatXP import canGetXP, checkXP
 
 try:
     database.connectToDB()
@@ -80,6 +80,7 @@ async def process_command(message, client):
     await chatBot.checkCommand(message, client)
     await promotions.checkCommand(message, client)
     await globalCommands.checkCommand(message, client)
+    await checkXP(message, client)
 
 
 # This is a huge mess

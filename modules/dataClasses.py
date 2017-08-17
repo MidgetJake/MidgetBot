@@ -2,6 +2,7 @@
 # We are using this to save time/resources as calling the database for EVERY message can potentially be slow
 # Although it is still very WiP
 
+
 ####################
 # The server class #
 ####################

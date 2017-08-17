@@ -89,8 +89,8 @@ def checkPoints(message, points):
     uPoints = result[0]
 
     # Mods can make quotes for free!
-    #if message.author.permissions_in(message.channel).administrator:
-    #    return True
+    if message.author.permissions_in(message.channel).administrator:
+        return True
 
     if uPoints >= points:
         newPoints = uPoints - points
@@ -109,8 +109,8 @@ def getCommandCost(message, command):
     sID = '{}'.format(message.server.id)
     cmd = '{}'.format(command)
     print('This: {} and this: {}'.format(command, sID))
-    cursor.execute('SELECT %s FROM settings WHERE serverID = %s', (cmd, sID))
+    cursor.execute('SELECT * FROM settings WHERE serverID = %s', (sID,))
     result = cursor.fetchone()
     print('TEEEEE {}'.format(result))
-    cost = result[0]
+    cost = result[1]
     return cost

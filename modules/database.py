@@ -7,7 +7,6 @@ host = tokenKeys.dbHost
 user = tokenKeys.dbUser
 passW = tokenKeys.dbPass
 
-
 def connectToDB():
     dbName = 'MAIN'
 
@@ -17,6 +16,15 @@ def connectToDB():
     print('Connection successful')
 
 
+def updateDB(server):
+    test = '{}'.format(server.id)
+    conn_string = 'host = {} dbname = {} user = {} password = {}'.format(host, 'MAIN', user, passW)
+    conn = postG.connect(conn_string)
+    conn.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
+    cursor = conn.cursor()
+    cursor.execute('INSERT INTO settings VALUES (%s, 250)', (test,))
+    cursor.close()
+    conn.close()
 
 
 def addServer(server):
@@ -26,6 +34,7 @@ def addServer(server):
     conn = postG.connect(conn_string)
     cursor = conn.cursor()
     cursor.execute("INSERT INTO serverlist VALUES(%s, %s, %s, %s)", (server.id, server.name, len(server.members), datetime.today()))
+    cursor.execute('INSERT INTO settings VALUES (%s, 250)', (server.id,))
     print('Oh look a new server: {}'.format(server.name))
     print('Or in a way that we can find the server: {}'.format(server.id))
 
@@ -49,7 +58,6 @@ def setupServerDB(server):
     conn.close()
 
     conn_string = 'host = {} dbname = {} user = {} password = {}'.format(host, test, user, passW)
-    print(conn_string)
     conn = postG.connect(conn_string)
     conn.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
     cursor = conn.cursor()
@@ -62,10 +70,11 @@ def setupServerDB(server):
                                           'checkRank BOOLEAN DEFAULT TRUE,'
                                           'earnXP BOOLEAN DEFAULT TRUE,'
                                           'slowMode BOOLEAN DEFAULT FALSE,'
-                                          'slowTime INT DEFAULT 0)')
+                                          'slowTime INT DEFAULT 0,'
+                                          'quoteAddCost INT DEFAULT 500)')
     for chan in server.channels:
         cursor.execute('INSERT INTO settings (CHANID) VALUES (%s)', (chan.id,))
-
+    cursor.execute('INSERT INTO settings (CHANID) VALUES (0)')
 
     print('Make users')
     cursor.execute('CREATE TABLE users (id BIGINT PRIMARY KEY,'
@@ -94,3 +103,20 @@ def setupServerDB(server):
     cursor.execute('CREATE TABLE bannedWords (id SERIAL PRIMARY KEY,'
                    'word TEXT,'
                    'hard BOOLEAN DEFAULT FALSE)')
+
+    print('make quotes')
+    cursor.execute('CREATE TABLE quotes (ID SERIAL PRIMARY KEY,'
+                   'name TEXT,'
+                   'quote TEXT,'
+                   'date TIMESTAMPTZ,'
+                   'creator TEXT)')
+
+def addUser(member):
+    test = 'server_{}'.format(member.server.id)
+    conn_string = 'host = {} dbname = {} user = {} password = {}'.format(host, test, user, passW)
+    conn = postG.connect(conn_string)
+    conn.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
+    cursor = conn.cursor()
+    cursor.execute('INSERT INTO users (ID, NAME) VALUES (%s, %s)', (member.id, member.name))
+    cursor.close()
+    conn.close()

@@ -3,7 +3,7 @@ import asyncio
 import json
 from time import time, sleep
 import discord
-from commands import chatBot, globalCommands, modCommands, promotions, ytStream
+from commands import chatBot, globalCommands, modCommands, promotions, ytStream, pointCommands
 from config import tokenKeys
 from modules import autoMod, youtubeChecker
 from modules import database
@@ -32,6 +32,11 @@ async def on_ready():
 
     print('Any new servers since we were online?')
     for server in client.servers:
+        try:
+            #database.updateDB(server)
+            pass
+        except:
+            pass
         try:
             database.addServer(server)
         except:
@@ -72,15 +77,31 @@ async def on_message(message):
                 canGetXP(message)
 
 
+@client.event
+async def on_member_join(member):
+    print('New member has joined {}! - {} | {}'.format(member.server.name, member.name, member.id))
+    database.addUser(member)
+
+@client.event
+async def on_server_join(server):
+    print('Joined a new server! - {}'.format(server.id))
+    print('Server name - {}'.format(server.name))
+    database.addServer(server)
+
 # This is where all the commands are processed
 # This will be updated when the bot becomes more customisable between server
 async def process_command(message, client):
-    await chatBot.chatBotTalk(message, client)
-    await ytStream.checkCommand(message, client)
-    await chatBot.checkCommand(message, client)
-    await promotions.checkCommand(message, client)
-    await globalCommands.checkCommand(message, client)
-    await checkXP(message, client)
+    try:
+        print(message.embeds[0])
+    except IndexError:
+        print(message.author.name)
+        await chatBot.chatBotTalk(message, client)
+        await ytStream.checkCommand(message, client)
+        await chatBot.checkCommand(message, client)
+        await promotions.checkCommand(message, client)
+        await globalCommands.checkCommand(message, client)
+        await checkXP(message, client)
+        await pointCommands.quoteSystem(message, client)
 
 
 # This is a huge mess

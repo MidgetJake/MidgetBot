@@ -12,7 +12,6 @@ def doChecks(msg):
         checkList.append(checkIfBanned(msg))
         checkList.append(checkForDiscordProm(msg))
         checkList.append(checkForYoutube(msg))
-        print(checkList)
         if True in checkList:
             return True
         else:

@@ -57,7 +57,7 @@ async def on_ready():
 async def on_message(message):
 
     msg = message.content.split()
-    print(str(time()) + ' | ' + message.server.name + ' | ' + message.channel.name + ' | ' + message.channel.id + ' | ' + message.author.name + " | " + message.content + " | " + message.author.id)
+    print('| ' + str(time().strftime('%d-%m-%Y')) + ' | ' + message.server.name + ' | ' + message.channel.name + ' | ' + message.channel.id + ' | ' + message.author.name + " | " + message.content + " | " + message.author.id)
 
     if len(message.attachments) >= 1:
         await client.add_reaction(message, '👍')
@@ -79,14 +79,30 @@ async def on_message(message):
 
 @client.event
 async def on_member_join(member):
-    print('New member has joined {}! - {} | {}'.format(member.server.name, member.name, member.id))
+    print('-------------------------------------')
+    print('| New member has joined {}! - {} | {}'.format(member.server.name, member.name, member.id))
+    print('-------------------------------------')
     database.addUser(member)
 
 @client.event
 async def on_server_join(server):
-    print('Joined a new server! - {}'.format(server.id))
-    print('Server name - {}'.format(server.name))
+    print('-------------------------------------')
+    print('| Joined a new server! - {}'.format(server.id))
+    print('| Server name - {}'.format(server.name))
+    print('-------------------------------------')
     database.addServer(server)
+
+
+@client.evet
+async def on_server_remove(server):
+    print('-------------------------------------')
+    print('| We have be removed from this server: {}'.format(server.name))
+    print('| The ID of this server is: {}'.format(server.id))
+    print('-------------------------------------')
+    with open('config/leftServers', 'a') as af:
+        af.write(server.id)
+    #ToDo:
+    #     - Remove the server database when the bot leaves a server
 
 # This is where all the commands are processed
 # This will be updated when the bot becomes more customisable between server
@@ -94,7 +110,6 @@ async def process_command(message, client):
     try:
         print(message.embeds[0])
     except IndexError:
-        print(message.author.name)
         await chatBot.chatBotTalk(message, client)
         await ytStream.checkCommand(message, client)
         await chatBot.checkCommand(message, client)

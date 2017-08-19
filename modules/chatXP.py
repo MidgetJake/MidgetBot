@@ -37,7 +37,6 @@ def canGetXP(message):
     except:
         try:
             messageSent[message.server.id][message.author.id] = True
-            print('This is possible')
         except:
             messageSent[message.server.id] = {}
             messageSent[message.server.id][message.author.id] = True
@@ -60,7 +59,7 @@ def addXP(message):
     xp += gain
     tXP += gain
     print('{} has gained {} points!'.format(message.author.name, gain))
-    if xp >= (level*150):
+    if (xp-((level-1)*150)) >= (level*150):
         #xp -= (level*150)
         level += 1
         print('{} has leveled up to level {}!'.format(message.author.name, level))

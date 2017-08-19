@@ -107,10 +107,7 @@ def getCommandCost(message, command):
     conn = postG.connect(conn_string)
     cursor = conn.cursor()
     sID = '{}'.format(message.server.id)
-    cmd = '{}'.format(command)
-    print('This: {} and this: {}'.format(command, sID))
     cursor.execute('SELECT * FROM settings WHERE serverID = %s', (sID,))
     result = cursor.fetchone()
-    print('TEEEEE {}'.format(result))
     cost = result[1]
     return cost

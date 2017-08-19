@@ -41,7 +41,7 @@ async def quoteSystem(message, client):
                 embed.set_footer(text='Quoted by: {}'.format(message.author.name))
                 embed.set_author(name=message.author.name, icon_url=message.author.avatar_url)
                 await client.send_message(message.channel, embed=embed)
-                print('Quote Added')
+                print('| Quote Added')
             else:
                 await client.send_message(message.channel, 'You do not have enough points to add a quote. It requires {} points'.format(cost))
         elif msg[1] in ['remove', 'delete', 'rem', 'del']:

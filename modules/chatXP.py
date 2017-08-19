@@ -16,7 +16,7 @@ class timeCheck:
         self.messageSent = {}
 
     def resetTime(self):
-        print('It\'s been over a minute. Time to reset point timer')
+        print('| It\'s been over a minute. Time to reset point timer')
         self.lastTime = time()
         self.messageSent = {}
 
@@ -58,11 +58,11 @@ def addXP(message):
     gain = randrange(30)
     xp += gain
     tXP += gain
-    print('{} has gained {} points!'.format(message.author.name, gain))
+    print('| {} has gained {} points!'.format(message.author.name, gain))
     if (xp-((level-1)*150)) >= (level*150):
         #xp -= (level*150)
         level += 1
-        print('{} has leveled up to level {}!'.format(message.author.name, level))
+        print('| {} has leveled up to level {}!'.format(message.author.name, level))
 
     cursor.execute('UPDATE users SET level = %s, xp = %s, totalXP = %s WHERE id = %s', (level, xp, tXP, message.author.id))
     cursor.close()

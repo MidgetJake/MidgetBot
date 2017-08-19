@@ -9,6 +9,7 @@ from modules import autoMod, youtubeChecker
 from modules import database
 from modules.dataClasses import Server
 from modules.chatXP import canGetXP, checkXP
+from datetime import datetime
 
 try:
     database.connectToDB()
@@ -57,7 +58,15 @@ async def on_ready():
 async def on_message(message):
 
     msg = message.content.split()
-    print('| ' + str(time().strftime('%d-%m-%Y')) + ' | ' + message.server.name + ' | ' + message.channel.name + ' | ' + message.channel.id + ' | ' + message.author.name + " | " + message.content + " | " + message.author.id)
+    print('| {} | {} | {} | {} | {} | {} | {} | {}'.format(
+                                                       datetime.today().strftime('%d-%m-%Y %H:%M:%S'),
+                                                       message.server.name,
+                                                       message.server.id,
+                                                       message.channel.name,
+                                                       message.channel.id,
+                                                       message.author.name,
+                                                       message.author.id,
+                                                       message.content))
 
     if len(message.attachments) >= 1:
         await client.add_reaction(message, '👍')

@@ -26,6 +26,12 @@ async def checkCommand(message, client):
         cursor.close()
         conn.close()
         await client.send_message(message.channel, 'Thanks for your suggestion!')
+
+    if msg[0].lower() in ['!joined', 'sj']:
+        if len(message.mentions) == 1:
+            for user in message.mentions:
+                await client.send_message(message.channel, 'User joined this server at: {}'.format(user.joined_at.strftime('%d-%m-%Y %H:%M:%S')))
+
     # Returns a random number up to the range specified by user
     #if msg[0] == '!rand':
     #    try:

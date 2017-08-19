@@ -117,6 +117,6 @@ def addUser(member):
     conn = postG.connect(conn_string)
     conn.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
     cursor = conn.cursor()
-    cursor.execute('INSERT INTO users (ID, NAME) VALUES (%s, %s)', (member.id, member.name))
+    cursor.execute('INSERT INTO users (ID, NAME, joined) VALUES (%s, %s)', (member.id, member.name, datetime.today()))
     cursor.close()
     conn.close()

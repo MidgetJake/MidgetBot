@@ -93,7 +93,7 @@ async def on_server_join(server):
     database.addServer(server)
 
 
-@client.evet
+@client.event
 async def on_server_remove(server):
     print('-------------------------------------')
     print('| We have be removed from this server: {}'.format(server.name))

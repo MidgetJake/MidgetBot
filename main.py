@@ -113,6 +113,15 @@ async def on_server_remove(server):
     #ToDo:
     #     - Remove the server database when the bot leaves a server
 
+@client.event
+async def on_member_remove(member):
+    print('-------------------------------------')
+    print('| User: {} has left server: {}'.format(member.name, member.server.name))
+    print('| The ID this user is: {} and the server: {}'.format(member.id, member.server.id))
+    print('-------------------------------------')
+    with open ('config/leftMembers', 'a') as af:
+        af.write('{} | {}'.format(member.id, member.server.id))
+
 # This is where all the commands are processed
 # This will be updated when the bot becomes more customisable between server
 async def process_command(message, client):

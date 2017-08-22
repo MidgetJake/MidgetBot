@@ -2,6 +2,7 @@ import json
 from time import time
 from config import bannedWords
 from commands.helpers import checkJson
+import re
 
 
 def doChecks(msg):
@@ -44,7 +45,10 @@ def checkIfBanned(msg):
         pass
 
     for bWord in hardBList:
-        if bWord in msg.content.lower():
+        pat = '.*{}.*'.format(bWord)
+        pattern = re.compile(pat)
+        if pattern.match(msg.content.lower()):
+        #if bWord in msg.content.lower():
             return True
 
     msgSplit = msg.content.split()

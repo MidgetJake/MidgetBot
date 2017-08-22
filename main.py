@@ -88,15 +88,16 @@ async def on_message(message):
 
 @client.event
 async def on_message_edit(oldM, newM):
-    print('Message edited!')
+    print('| Message edited!')
     if newM.author.id != client.user.id:
-        autoMod.doChecks(newM)
-        print('-------------------------------------')
-        print('| {} / {} edited a message and it was deleted'.format(newM.author.name, newM.author.id))
-        print('| Old message: {} '.format(oldM.content))
-        print('| New message: {} '.format(newM.content))
-        print('-------------------------------------')
-        await client.delete_message(newM)
+        if autoMod.doChecks(newM):
+            await client.delete_message(newM)
+            print('-------------------------------------')
+            print('| {} / {} edited a message and it was deleted'.format(newM.author.name, newM.author.id))
+            print('| Old message: {} '.format(oldM.content))
+            print('| New message: {} '.format(newM.content))
+            print('-------------------------------------')
+
 
 @client.event
 async def on_member_join(member):

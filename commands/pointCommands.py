@@ -61,6 +61,14 @@ async def quoteSystem(message, client):
                     if qNum > result[0]:
                         await client.send_message(message.channel, 'Quote #{} doesn\' exist!'.format(qNum))
                     else:
+                        cursor.execute('SELECT * FROM quotes WHERE id = %s', (qNum,))
+                        delQ = cursor.fetchone()
+                        buildS = ''
+                        for v in delQ:
+                            buildS += '{} | '.format(v)
+                        buildS += '\n'
+                        with open('deletedQuotes', 'a') as af:
+                            af.write(buildS)
                         cursor.execute('DELETE FROM quotes WHERE id = %s', (qNum,))
                         cursor.execute('UPDATE quotes SET id = id - 1 WHERE id > %s', (qNum,))
                         maxN = result[0] - 1

@@ -1,4 +1,5 @@
 from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
+from modules.database import addUser
 from config import tokenKeys
 from random import randrange
 from time import time
@@ -25,7 +26,7 @@ class timeCheck:
 
 getTime = timeCheck()
 
-def canGetXP(message):
+def canGetXP(message, client):
     if time() - getTime.lastTime > 59:
         getTime.resetTime()
 
@@ -50,10 +51,18 @@ def addXP(message):
     conn.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
     cursor = conn.cursor()
     cursor.execute('SELECT level, xp, totalXP FROM users WHERE ID = %s', (message.author.id,))
-    result = cursor.fetchone()
-    level = result[0]
-    xp = result[1]
-    tXP = result[2]
+    try:
+        result = cursor.fetchone()
+        level = result[0]
+        xp = result[1]
+        tXP = result[2]
+    except:
+        addUser(message.author)
+        cursor.execute('SELECT level, xp, totalXP FROM users WHERE ID = %s', (message.author.id,))
+        result = cursor.fetchone()
+        level = result[0]
+        xp = result[1]
+        tXP = result[2]
 
     gain = randrange(30)
     xp += gain
@@ -69,7 +78,7 @@ def addXP(message):
     conn.close()
 
 
-async def checkXP( message, client):
+async def checkXP(message, client):
     if message.author.id != client.user.id:
         msg = message.content.split()
 

@@ -86,7 +86,7 @@ async def on_message(message):
                     for chan in message.server.channels:
                         print(chan)
                 await process_command(message, client)
-                canGetXP(message)
+                canGetXP(message, client)
 
 
 @client.event

@@ -19,16 +19,19 @@ passW = tokenKeys.dbPass
 async def commandHandler(message, client):
     if message.author.permissions_in(message.channel).administrator:
         msg = message.content.split()
-        if msg[0] in ['!roleperms', '!rp']:
-            await rolePerms(message, client)
-        elif msg[0] in ['!bannedwords', '!bw']:
-            await bannedWords(message),
-        elif msg[0] in ['!slow']:
-            await slowMode(message, client)
-        elif msg[0] in ['!mute']:
-            await muteToggle(message, True)
-        elif msg[0] in ['!unmute']:
-            await muteToggle(message, False)
+        try:
+            if msg[0] in ['!roleperms', '!rp']:
+                await rolePerms(message, client)
+            elif msg[0] in ['!bannedwords', '!bw']:
+                await bannedWords(message),
+            elif msg[0] in ['!slow']:
+                await slowMode(message, client)
+            elif msg[0] in ['!mute']:
+                await muteToggle(message, True)
+            elif msg[0] in ['!unmute']:
+                await muteToggle(message, False)
+        except:
+            pass #This happens when there is an embed
 
 
 

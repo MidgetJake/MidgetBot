@@ -6,8 +6,10 @@
 #       - !clear <no. messages> | Deletes the last number of messages
 #       - !bannedWords remove <[words]> | Allow banned words to be removed
 
-from commands.helpers import checkJson
 import json
+
+from modules.helpers import checkJson
+
 
 async def checkCommand(message, client):
     if message.author.permissions_in(message.channel).administrator:

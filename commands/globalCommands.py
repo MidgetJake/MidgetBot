@@ -17,7 +17,7 @@ async def checkCommand(message, client):
         await client.send_message(message.channel, Eball.eBall(randrange(20)))
 
     if msg[0].lower() in ['!suggestion', '!s', '!suggest']:
-        conn_string = 'host = {} dbname = {} user = {} password = {}'.format(host, 'MAIN', user, passW)
+        conn_string = 'host = {} dbname = {} user = {} password = {}'.format(host, 'MAIN', message.author.name, passW)
         conn = postG.connect(conn_string)
         conn.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
         cursor = conn.cursor()

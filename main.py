@@ -19,11 +19,11 @@ except:
 
 if dbConnect:
     client = discord.Client()
+    client.serverDict = {}
 else:
     print('Unable to connect to database')
     print('Bot requires a database connection')
 
-serverDict = {}
 
 
 @client.event
@@ -34,7 +34,7 @@ async def on_ready():
     print('Any new servers since we were online?')
     for server in client.servers:
         try:
-            #database.updateDB(server)
+            database.updateDB(server)
             pass
         except:
             pass
@@ -42,7 +42,7 @@ async def on_ready():
             database.addServer(server)
         except:
             pass
-        serverDict[server.id] = Server(server)
+        client.serverDict[server.id] = Server(server)
 
     print('---------------------')
     print('| Started MidgetBot |')

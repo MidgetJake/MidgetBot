@@ -1,8 +1,9 @@
 import json
-from time import time
-from config import bannedWords
-from commands.helpers import checkJson
 import re
+from time import time
+
+from config import bannedWords
+from modules.helpers import checkJson
 
 
 def doChecks(msg):

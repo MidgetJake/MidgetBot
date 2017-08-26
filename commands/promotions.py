@@ -1,6 +1,9 @@
-from commands.helpers import checkJson
-import discord
 import json
+
+import discord
+
+from modules.helpers import checkJson
+
 
 async def checkCommand(message, client):
     msg = message.content.split()

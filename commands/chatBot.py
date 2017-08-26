@@ -1,7 +1,9 @@
-from chatterbotapi import ChatterBotFactory, ChatterBotType
-from ExpChatBot import chat
-from commands.helpers import checkJson
 import json
+
+from ExpChatBot import chat
+from chatterbotapi import ChatterBotFactory, ChatterBotType
+from modules.helpers import checkJson
+
 
 async def checkCommand(message, client):
     msg = message.content.split()

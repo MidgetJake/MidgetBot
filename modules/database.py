@@ -17,12 +17,14 @@ def connectToDB():
 
 
 def updateDB(server):
-    test = '{}'.format(server.id)
-    conn_string = 'host = {} dbname = {} user = {} password = {}'.format(host, 'MAIN', user, passW)
+    test = 'server_{}'.format(server.id)
+    conn_string = 'host = {} dbname = {} user = {} password = {}'.format(host, test, user, passW)
     conn = postG.connect(conn_string)
     conn.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
     cursor = conn.cursor()
-    cursor.execute('INSERT INTO settings VALUES (%s, 250)', (test,))
+    cursor.execute('ALTER TABLE roleperms ADD addquote BOOLEAN DEFAULT TRUE')
+    cursor.execute('ALTER TABLE roleperms ADD editquote BOOLEAN DEFAULT FALSE')
+    cursor.execute('ALTER TABLE roleperms ADD delquote BOOLEAN DEFAULT FALSE')
     cursor.close()
     conn.close()
 
@@ -95,7 +97,10 @@ def setupServerDB(server):
                    'mute BOOLEAN DEFAULT FALSE,'
                    'banword BOOLEAN DEFAULT FALSE,'
                    'timeout BOOLEAN DEFAULT FALSE,'
-                   'clear BOOLEAN DEFAULT FALSE)')
+                   'clear BOOLEAN DEFAULT FALSE,'
+                   'addquote BOOLEAN DEFAULT TRUE,'
+                   'editquote BOOLEAN DEFAULT FALSE,'
+                   'delquote BOOLEAN DEFAULT FALSE)')
     for role in server.role_hierarchy:
         cursor.execute('INSERT INTO roleperms (NAME) VALUES (%s)', (str(role),))
 

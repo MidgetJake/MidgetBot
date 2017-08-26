@@ -52,6 +52,8 @@ async def on_ready():
     print('| BotID: {}'.format(client.user.id))
     print('---------------------')
 
+    await client.change_presence(game=discord.Game(name='with {} users'.format(users)))
+
     _thread.start_new_thread(constCheck, (client,))
 
 @client.event
@@ -75,7 +77,8 @@ async def on_message(message):
     else:
         # Make sure it's not the bot sending the message
         if message.author.id != client.user.id:
-            await modCommands.checkCommand(message, client)
+            #await modCommands.checkCommand(message, client)
+            await modCommands.commandHandler(message, client)
             if autoMod.doChecks(message):
                 await client.delete_message(message)
             else:

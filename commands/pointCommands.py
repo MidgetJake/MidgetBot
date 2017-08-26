@@ -65,6 +65,7 @@ async def quoteSystem(message, client):
                         cursor.execute('UPDATE quotes SET id = id - 1 WHERE id > %s', (qNum,))
                         maxN = result[0] - 1
                         cursor.execute('SELECT setval(\'quotes_id_seq\', %s)', (maxN,))
+                        print('| Quote #{} has been deleted from: {}'.format(qNum, message.server.name))
                         await client.send_message(message.channel, 'Quote #{} has been deleted!'.format(qNum))
                 except:
                     await client.send_message(message.channel, 'Use a valid number to remove a quote')

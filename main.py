@@ -142,7 +142,7 @@ async def on_member_remove(member):
 # This will be updated when the bot becomes more customisable between server
 async def process_command(message, client):
     try:
-        print(message.embeds[0])
+        temp = message.embeds[0]
     except IndexError:
         await chatBot.chatBotTalk(message, client)
         await ytStream.checkCommand(message, client)

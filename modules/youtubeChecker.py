@@ -20,10 +20,10 @@ def isLive(chanID):
         liveLink = parsedData['items'][0]['id']['videoId']
         try:
             thumbnailURL = parsedData['items'][0]['snippet']['thumbnails']['high']['url']
-            request.urlretrieve(thumbnailURL, 'thumbnails/' + chanID + 'temp.jpg')
+            request.urlretrieve(thumbnailURL, 'thumbnails/' + chanID + '/temp.jpg')
             setThumb = True
         except:
-            print('failed at retrieving thumbnail')
+            #print('failed at retrieving thumbnail')
             setThumb = False
         chanName = parsedData['items'][0]['snippet']['channelTitle']
         tupleData = (chanID, title, liveLink, chanName, setThumb)

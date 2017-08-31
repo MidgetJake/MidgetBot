@@ -84,12 +84,15 @@ async def checkXP(message, client):
 
         if msg[0] == '!points':
             server = message.server.id
-            test = 'server_{}'.format(server)
-            conn_string = 'host = {} dbname = {} user = {} password = {}'.format(host, test, user, passW)
+            dbname = 'server_{}'.format(server)
+            conn_string = 'host = {} dbname = {} user = {} password = {}'.format(host, dbname, user, passW)
             conn = postG.connect(conn_string)
             conn.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
             cursor = conn.cursor()
-            cursor.execute('SELECT xp, totalXP FROM users WHERE ID = %s', (message.author.id,))
+            if len(message.mentions) > 0:
+                cursor.execute('SELECT xp, totalXP FROM users WHERE ID = %s', (message.mentions[0].id,))
+            else:
+                cursor.execute('SELECT xp, totalXP FROM users WHERE ID = %s', (message.author.id,))
             result = cursor.fetchone()
             currXP = result[0]
             totalXP = result[1]
@@ -97,5 +100,5 @@ async def checkXP(message, client):
             xpEmbed = discord.Embed(title='', description='', colour=0x0055FF)
             xpEmbed.add_field(name='Current Points:', value=currXP, inline=True)
             xpEmbed.add_field(name='Total Points:', value=totalXP, inline=True)
-            xpEmbed.set_author(name=message.author.name, icon_url=message.author.avatar_url)
+            xpEmbed.set_author(name=message.mentions[0].name, icon_url=message.mentions[0].avatar_url)
             await client.send_message(message.channel, embed=xpEmbed)

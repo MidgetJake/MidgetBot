@@ -104,33 +104,34 @@ async def quoteSystem(message, client):
                     else:
                         await client.send_message(message.channel, 'Quote #{} does not exist!'.format(number))
         except:
-            server = message.server.id
-            test = 'server_{}'.format(server)
-            conn_string = 'host = {} dbname = {} user = {} password = {}'.format(host, test, user, passW)
-            conn = postG.connect(conn_string)
-            cursor = conn.cursor()
-            cursor.execute('SELECT name, quote, date, creator FROM quotes')
+            if not len(msg) > 1:
+                server = message.server.id
+                test = 'server_{}'.format(server)
+                conn_string = 'host = {} dbname = {} user = {} password = {}'.format(host, test, user, passW)
+                conn = postG.connect(conn_string)
+                cursor = conn.cursor()
+                cursor.execute('SELECT name, quote, date, creator FROM quotes')
 
-            quotes = cursor.fetchall()
-            try:
-                selected = randrange(len(quotes))+1
-                if quotes[selected] is not None:
-                    print(selected)
-                    quote = '\"{}\" - {} {}'.format(quotes[selected][1], quotes[selected][0], quotes[selected][2].strftime('%d-%m-%Y'))
+                quotes = cursor.fetchall()
+                try:
+                    selected = randrange(len(quotes))+1
+                    if quotes[selected] is not None:
+                        print(selected)
+                        quote = '\"{}\" - {} {}'.format(quotes[selected][1], quotes[selected][0], quotes[selected][2].strftime('%d-%m-%Y'))
 
-                    quoter = discord.utils.find(lambda m: m.id == quotes[selected][3], message.server.members)
-                    if quoter is None:
-                        quoter = '<User has left server>'
+                        quoter = discord.utils.find(lambda m: m.id == quotes[selected][3], message.server.members)
+                        if quoter is None:
+                            quoter = '<User has left server>'
 
-                    embed = discord.Embed(title='', description='', colour=0x0055FF)
-                    embed.add_field(name='Quote #{}'.format(selected), value=quote, inline=True)
-                    embed.set_footer(text='Quoted by: {}'.format(quoter))
-                    embed.set_author(name=message.author.name, icon_url=message.author.avatar_url)
-                    await client.send_message(message.channel, embed=embed)
-                else:
-                    await client.send_message(message.channel, 'Quote #{} does not exist!'.format(selected))
-            except ValueError:
-                await client.send_message(message.channel, 'No quotes exist! Create one with \"!quote add <Name> <Quote>\"')
+                        embed = discord.Embed(title='', description='', colour=0x0055FF)
+                        embed.add_field(name='Quote #{}'.format(selected), value=quote, inline=True)
+                        embed.set_footer(text='Quoted by: {}'.format(quoter))
+                        embed.set_author(name=message.author.name, icon_url=message.author.avatar_url)
+                        await client.send_message(message.channel, embed=embed)
+                    else:
+                        await client.send_message(message.channel, 'Quote #{} does not exist!'.format(selected))
+                except ValueError:
+                    await client.send_message(message.channel, 'No quotes exist! Create one with \"!quote add <Name> <Quote>\"')
 
 
 

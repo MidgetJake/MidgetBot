@@ -91,8 +91,12 @@ async def checkXP(message, client):
             cursor = conn.cursor()
             if len(message.mentions) > 0:
                 cursor.execute('SELECT xp, totalXP FROM users WHERE ID = %s', (message.mentions[0].id,))
+                name = message.mentions[0].name
+                avatar = message.mentions[0].avatar_url
             else:
                 cursor.execute('SELECT xp, totalXP FROM users WHERE ID = %s', (message.author.id,))
+                name = message.author.name
+                avatar = message.author.avatar_url
             result = cursor.fetchone()
             currXP = result[0]
             totalXP = result[1]
@@ -100,5 +104,5 @@ async def checkXP(message, client):
             xpEmbed = discord.Embed(title='', description='', colour=0x0055FF)
             xpEmbed.add_field(name='Current Points:', value=currXP, inline=True)
             xpEmbed.add_field(name='Total Points:', value=totalXP, inline=True)
-            xpEmbed.set_author(name=message.mentions[0].name, icon_url=message.mentions[0].avatar_url)
+            xpEmbed.set_author(name=name, icon_url=avatar)
             await client.send_message(message.channel, embed=xpEmbed)

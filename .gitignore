@@ -48,3 +48,6 @@ Temporary Items
 
 # Ignore our idea folder
 .idea/
+OLD-PYTHON/
+node_modules/
+dist/

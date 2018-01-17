@@ -1,5 +1,5 @@
 import Discord from 'discord.js';
-import Config from './config';
+import Secrets from './secrets';
 const client = new Discord.Client();
 
 client.on('ready', () => {
@@ -9,9 +9,11 @@ client.on('ready', () => {
 });
 
 client.on('message', message => {
-    if (message.content === 'ping') {
-        message.reply('pong');
+    if(message.author.id !== client.user.id){
+        if (message.content === 'ping') {
+            message.reply('pong');
+        }
     }
 });
 
-client.login(Config.discordkey);
+client.login(Secrets.discordkey);

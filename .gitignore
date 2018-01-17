@@ -51,4 +51,4 @@ Temporary Items
 OLD-PYTHON/
 node_modules/
 dist/
-config.js
+secrets.js

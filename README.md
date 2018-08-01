@@ -3,7 +3,7 @@ Installation
 -----
 1. Clone the repository
 2. Run `npm install` in root directory
-3. Create a `secrects.js` with contents:
+3. Create a `secrets.js` with contents:
     ```js
         export const discordKey = 'Discord Bot API key';
         export const chatBotKey = 'Pandorabots API key';

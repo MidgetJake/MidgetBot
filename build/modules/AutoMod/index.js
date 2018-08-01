@@ -23,9 +23,14 @@ var AutoMod = function () {
         this.server = serverID;
 
         _fs2.default.readFile('./Config/Servers/' + serverID + '.json', 'utf8', function (err, data) {
-            if (err) return console.error('Error reading config:', err);
-            _this.config = JSON.parse(data);
-            console.log(_this.config);
+            if (err) {
+                _fs2.default.writeFileSync('./Config/Servers/' + serverID + '.json', JSON.stringify({ rules: [] }), 'utf8', function (err) {
+                    console.error('Error creating file:', err);
+                });
+                _this.config = { rules: [] };
+            } else {
+                _this.config = JSON.parse(data);
+            }
         });
     }
 

@@ -5,9 +5,14 @@ class AutoMod {
         this.server = serverID;
 
         fs.readFile('./Config/Servers/' + serverID + '.json', 'utf8', (err, data) => {
-            if (err) return console.error('Error reading config:', err);
-            this.config = JSON.parse(data);
-            console.log(this.config);
+            if (err) {
+                fs.writeFileSync('./Config/Servers/' + serverID + '.json', JSON.stringify({rules: []}), 'utf8', err => {
+                    console.error('Error creating file:', err);
+                });
+                this.config = { rules: [] };
+            } else {
+                this.config = JSON.parse(data);
+            }
         });
     }
 

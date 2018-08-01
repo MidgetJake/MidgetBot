@@ -3,12 +3,21 @@ import { discordKey, chatBotKey } from './secrets';
 import AutoMod from './modules/AutoMod';
 import ChatBot from './modules/ChatBot';
 import ModCommands from './modules/Commands/Mod'
+import fs from 'fs';
 
 const client = new Discord.Client();
 const chatBot = new ChatBot(chatBotKey);
 const modCmd = new ModCommands();
 const serverMods = {};
 let ready = false;
+
+if (!fs.existsSync('./Config')){
+    fs.mkdirSync('./Config');
+}
+
+if (!fs.existsSync('./Config/Servers')){
+    fs.mkdirSync('./Config/Servers');
+}
 
 client.on('ready', () => {
     console.log(' -- Initialising Server Mods -- ');

@@ -2,9 +2,11 @@ import Discord from 'discord.js';
 import { discordKey, chatBotKey } from './secrets';
 import AutoMod from './modules/AutoMod';
 import ChatBot from './modules/ChatBot';
+import ModCommands from './modules/Commands/Mod'
 
 const client = new Discord.Client();
 const chatBot = new ChatBot(chatBotKey);
+const modCmd = new ModCommands();
 const serverMods = {};
 let ready = false;
 
@@ -55,5 +57,21 @@ client.login(discordKey).then(() => {
 
             return true; // We don't want to execute a command if we are just talking to the bot
         }
+
+        const msg = message.cleanContent.split(' ');
+        if (message.member.hasPermission(8)) {
+            modCmd.ParseCommand(message, serverMods[message.guild.id.toString()]);
+        }
     });
+
+    // Can't get around the AutoMod by editing a message ;)
+    client.on('messageUpdate', (oldMsg, message) => {
+        if (!ready) return;
+        if (message.author.id === client.user.id) return;
+
+        // Done asynchronously so it doesn't hold up anything even if the message is to be deleted.
+        serverMods[message.guild.id.toString()].Moderate(message).then( toDelete => {
+            if(toDelete) message.delete();
+        });
+    })
 });

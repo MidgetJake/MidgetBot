@@ -55,11 +55,13 @@ client.login(discordKey).then(() => {
             let ownNick = client.user.username;
             for (let user of message.mentions.members) {
                 if(user[1].id === client.user.id) {
-                    ownNick = user[1].nickname;
+                    ownNick = user[1].nickname ? user[1].nickname : client.user.username;
                 }
             }
 
+            console.log(ownNick);
             msg = msg.replace(ownNick + ' ', '');
+            console.log(msg);
             chatBot.Think(msg).then(response => {
                 message.reply(response);
             });

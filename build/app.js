@@ -143,6 +143,10 @@ client.login(_secrets.discordKey).then(function () {
             var variant = '';
             var variants = ['Ah', 'Angery', 'Annoy', 'Cri', 'Dizz', 'Erk', 'Gleam', 'Happ', 'No', 'O', 'Phew', 'Sad', 'Smile', 'SuperHapp', 'Tear', 'Waa'];
             if (msg[1]) {
+                if (msg[1].toLowerCase() === 'help' || msg[1].toLowerCase() === '?') {
+                    message.channel.send('Variations are: `ah, angery, annoy, cri, dizz, erk, gleam, happ, no, o, phew, sad, smile, superhapp, tear, waa`');
+                    return;
+                }
                 variant = msg[1].toLowerCase();
                 variant = variant.split('');
                 variant[0] = variant[0].toUpperCase();

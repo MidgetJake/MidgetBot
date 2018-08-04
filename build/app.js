@@ -14,12 +14,29 @@ var _ChatBot = require('./modules/ChatBot');
 
 var _ChatBot2 = _interopRequireDefault(_ChatBot);
 
+var _Mod = require('./modules/Commands/Mod');
+
+var _Mod2 = _interopRequireDefault(_Mod);
+
+var _fs = require('fs');
+
+var _fs2 = _interopRequireDefault(_fs);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var client = new _discord2.default.Client();
 var chatBot = new _ChatBot2.default(_secrets.chatBotKey);
+var modCmd = new _Mod2.default();
 var serverMods = {};
 var ready = false;
+
+if (!_fs2.default.existsSync('./Config')) {
+    _fs2.default.mkdirSync('./Config');
+}
+
+if (!_fs2.default.existsSync('./Config/Servers')) {
+    _fs2.default.mkdirSync('./Config/Servers');
+}
 
 client.on('ready', function () {
     console.log(' -- Initialising Server Mods -- ');
@@ -78,7 +95,7 @@ client.login(_secrets.discordKey).then(function () {
         }
 
         if (message.isMentioned(client.user)) {
-            var msg = message.cleanContent.replace('@', '');
+            var _msg = message.cleanContent.replace('@', '');
             var ownNick = client.user.username;
             var _iteratorNormalCompletion2 = true;
             var _didIteratorError2 = false;
@@ -89,7 +106,7 @@ client.login(_secrets.discordKey).then(function () {
                     var user = _step2.value;
 
                     if (user[1].id === client.user.id) {
-                        ownNick = user[1].nickname;
+                        ownNick = user[1].nickname ? user[1].nickname : client.user.username;
                     }
                 }
             } catch (err) {
@@ -107,12 +124,50 @@ client.login(_secrets.discordKey).then(function () {
                 }
             }
 
-            msg = msg.replace(ownNick + ' ', '');
-            chatBot.Think(msg).then(function (response) {
+            console.log(ownNick);
+            _msg = _msg.replace(ownNick + ' ', '');
+            console.log(_msg);
+            chatBot.Think(_msg).then(function (response) {
                 message.reply(response);
             });
 
             return true; // We don't want to execute a command if we are just talking to the bot
         }
+
+        var msg = message.cleanContent.split(' ');
+        if (message.member.hasPermission(8)) {
+            modCmd.ParseCommand(message, serverMods[message.guild.id.toString()]);
+        }
+
+        if (msg[0].toLowerCase() === '!riolu') {
+            var variant = '';
+            var variants = ['Ah', 'Angery', 'Annoy', 'Cri', 'Dizz', 'Erk', 'Gleam', 'Happ', 'No', 'O', 'Phew', 'Sad', 'Smile', 'SuperHapp', 'Tear', 'Waa'];
+            if (msg[1]) {
+                variant = msg[1].toLowerCase();
+                variant = variant.split('');
+                variant[0] = variant[0].toUpperCase();
+                variant = variant.join('');
+                if (variant === 'Superhapp') {
+                    variant = 'SuperHapp';
+                }
+            } else {
+                variant = variants[Math.floor(Math.random() * variants.length)];
+            }
+
+            message.channel.send('Riolu is ' + variant, {
+                files: ['./Images/Riolu/Riolu' + variant + '.png']
+            });
+        }
+    });
+
+    // Can't get around the AutoMod by editing a message ;)
+    client.on('messageUpdate', function (oldMsg, message) {
+        if (!ready) return;
+        if (message.author.id === client.user.id) return;
+
+        // Done asynchronously so it doesn't hold up anything even if the message is to be deleted.
+        serverMods[message.guild.id.toString()].Moderate(message).then(function (toDelete) {
+            if (toDelete) message.delete();
+        });
     });
 });

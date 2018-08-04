@@ -36,7 +36,7 @@ client.on('ready', () => {
 client.login(discordKey).then(() => {
     client.on('message', message => {
         if (!ready) return;
-        if (message.author.id === client.user.id) return;
+        if(message.author.id === client.user.id) return
 
         // Done asynchronously so it doesn't hold up anything even if the message is to be deleted.
         serverMods[message.guild.id.toString()].Moderate(message).then( toDelete => {
@@ -72,6 +72,28 @@ client.login(discordKey).then(() => {
         const msg = message.cleanContent.split(' ');
         if (message.member.hasPermission(8)) {
             modCmd.ParseCommand(message, serverMods[message.guild.id.toString()]);
+        }
+
+        if(msg[0].toLowerCase() === '!riolu') {
+            let variant = '';
+            const variants = ['Ah', 'Angery', 'Annoy', 'Cri', 'Dizz', 'Erk', 'Gleam', 'Happ', 'No', 'O', 'Phew', 'Sad', 'Smile', 'SuperHapp', 'Tear', 'Waa'];
+            if (msg[1]) {
+                variant = msg[1].toLowerCase();
+                variant = variant.split('');
+                variant[0] = variant[0].toUpperCase();
+                variant = variant.join('');
+                if(variant === 'Superhapp') {
+                    variant = 'SuperHapp';
+                }
+            } else {
+                variant = variants[Math.floor(Math.random()*variants.length)];
+            }
+
+            message.channel.send('Riolu is ' + variant ,{
+                files: [
+                    './Images/Riolu/Riolu' + variant + '.png',
+                ],
+            })
         }
     });
 

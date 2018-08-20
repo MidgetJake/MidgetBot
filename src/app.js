@@ -76,10 +76,10 @@ client.login(discordKey).then(() => {
 
         if(msg[0].toLowerCase() === '!riolu') {
             let variant = '';
-            const variants = ['Ah', 'Angery', 'Annoy', 'Cri', 'Dizz', 'Erk', 'Gleam', 'Happ', 'No', 'O', 'Phew', 'Sad', 'Smile', 'SuperHapp', 'Tear', 'Waa'];
+            const variants = ['Ah', 'Angery', 'Annoy', 'Cry', 'Dizz', 'Erk', 'Gleam', 'Happ', 'Hmm', 'No', 'Oh', 'Ouch', 'Phew', 'Proud', 'Sad', 'Smile', 'SuperHapp', 'Tear', 'Waa'];
             if (msg[1]) {
                 if(msg[1].toLowerCase() === 'help' || msg[1].toLowerCase() === '?') {
-                    message.channel.send('Variations are: `ah, angery, annoy, cri, dizz, erk, gleam, happ, no, o, phew, sad, smile, superhapp, tear, waa`');
+                    message.channel.send('Variations are: `Ah, Angery, Annoy, Cry, Dizz, Erk, Gleam, Happ, Hmm, No, Oh, Ouch, Phew, Proud, Sad, Smile, SuperHapp, Tear, Waa`');
                     return;
                 }
                 variant = msg[1].toLowerCase();
@@ -95,7 +95,7 @@ client.login(discordKey).then(() => {
 
             message.channel.send('Riolu is ' + variant ,{
                 files: [
-                    './Images/Riolu/Riolu' + variant + '.png',
+                    './Images/Riolu/' + variant + '.png',
                 ],
             })
         }
